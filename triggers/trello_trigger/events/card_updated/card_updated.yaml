@@ -1,0 +1,97 @@
+identity:
+  name: card_updated
+  author: langgenius
+  label:
+    en_US: Card Updated
+    zh_Hans: 卡片更新
+    ja_JP: カード更新
+    ko_KR: 카드 업데이트
+description:
+  en_US: Fires when a card is updated (renamed, description/due changed, archived, etc.).
+  zh_Hans: 当卡片被更新时触发（重命名、描述/截止日期更改、归档等）。
+  ja_JP: カードが更新されたとき（名前変更、説明/期限の変更、アーカイブなど）に発火します。
+  ko_KR: 카드가 업데이트될 때(이름 변경, 설명/마감일 변경, 보관 등) 실행됩니다.
+parameters: []
+output_schema:
+  type: object
+  properties:
+    model:
+      type: object
+      description: The board the webhook is attached to.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+    action:
+      type: object
+      description: The Trello action that triggered this event.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        idMemberCreator:
+          type: string
+        memberCreator:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            fullName:
+              type: string
+            avatarUrl:
+              type:
+              - string
+              - "null"
+        data:
+          type: object
+          properties:
+            card:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                idShort:
+                  type: integer
+                shortLink:
+                  type: string
+                desc:
+                  type: string
+            old:
+              type: object
+              description: the previous values of changed fields
+            list:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+            board:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                shortLink:
+                  type: string
+      required:
+      - id
+      - type
+      - data
+  required:
+  - action
+extra:
+  python:
+    source: events/card_updated/card_updated.py

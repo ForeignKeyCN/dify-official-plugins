@@ -1,0 +1,101 @@
+identity:
+  name: checklist_item_updated
+  author: langgenius
+  label:
+    en_US: Checklist Item State Changed
+    zh_Hans: 检查项状态变更
+    ja_JP: チェックリスト項目の状態変更
+    ko_KR: 체크리스트 항목 상태 변경
+description:
+  en_US: Fires when a checklist item is checked or unchecked.
+  zh_Hans: 当检查项被勾选或取消勾选时触发。
+  ja_JP: チェックリスト項目がチェックまたはチェック解除されたときに発火します。
+  ko_KR: 체크리스트 항목이 체크되거나 체크 해제될 때 실행됩니다.
+parameters: []
+output_schema:
+  type: object
+  properties:
+    model:
+      type: object
+      description: The board the webhook is attached to.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+    action:
+      type: object
+      description: The Trello action that triggered this event.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        idMemberCreator:
+          type: string
+        memberCreator:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            fullName:
+              type: string
+            avatarUrl:
+              type:
+              - string
+              - "null"
+        data:
+          type: object
+          properties:
+            checkItem:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                state:
+                  type: string
+            checklist:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+            card:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                idShort:
+                  type: integer
+                shortLink:
+                  type: string
+            board:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                shortLink:
+                  type: string
+      required:
+      - id
+      - type
+      - data
+  required:
+  - action
+extra:
+  python:
+    source: events/checklist_item_updated/checklist_item_updated.py

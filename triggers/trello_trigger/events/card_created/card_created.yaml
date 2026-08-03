@@ -1,0 +1,92 @@
+identity:
+  name: card_created
+  author: langgenius
+  label:
+    en_US: Card Created
+    zh_Hans: 卡片创建
+    ja_JP: カード作成
+    ko_KR: 카드 생성
+description:
+  en_US: Fires when a new card is created on the board.
+  zh_Hans: 当看板上创建新卡片时触发。
+  ja_JP: ボードに新しいカードが作成されたときに発火します。
+  ko_KR: 보드에 새 카드가 생성될 때 실행됩니다.
+parameters: []
+output_schema:
+  type: object
+  properties:
+    model:
+      type: object
+      description: The board the webhook is attached to.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+    action:
+      type: object
+      description: The Trello action that triggered this event.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        idMemberCreator:
+          type: string
+        memberCreator:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            fullName:
+              type: string
+            avatarUrl:
+              type:
+              - string
+              - "null"
+        data:
+          type: object
+          properties:
+            card:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                idShort:
+                  type: integer
+                shortLink:
+                  type: string
+            list:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+            board:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                shortLink:
+                  type: string
+      required:
+      - id
+      - type
+      - data
+  required:
+  - action
+extra:
+  python:
+    source: events/card_created/card_created.py

@@ -1,0 +1,87 @@
+identity:
+  name: comment_added
+  author: langgenius
+  label:
+    en_US: Comment Added
+    zh_Hans: 评论添加
+    ja_JP: コメント追加
+    ko_KR: 댓글 추가
+description:
+  en_US: Fires when a comment is added to a card.
+  zh_Hans: 当向卡片添加评论时触发。
+  ja_JP: カードにコメントが追加されたときに発火します。
+  ko_KR: 카드에 댓글이 추가될 때 실행됩니다.
+parameters: []
+output_schema:
+  type: object
+  properties:
+    model:
+      type: object
+      description: The board the webhook is attached to.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+    action:
+      type: object
+      description: The Trello action that triggered this event.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        idMemberCreator:
+          type: string
+        memberCreator:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            fullName:
+              type: string
+            avatarUrl:
+              type:
+              - string
+              - "null"
+        data:
+          type: object
+          properties:
+            text:
+              type: string
+            card:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                idShort:
+                  type: integer
+                shortLink:
+                  type: string
+            board:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                shortLink:
+                  type: string
+      required:
+      - id
+      - type
+      - data
+  required:
+  - action
+extra:
+  python:
+    source: events/comment_added/comment_added.py

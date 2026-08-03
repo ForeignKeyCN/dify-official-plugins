@@ -1,0 +1,88 @@
+subscription_constructor:
+  parameters:
+  - name: "board"
+    label:
+      en_US: "Board"
+      zh_Hans: "看板"
+      ja_JP: "ボード"
+      ko_KR: "보드"
+    type: "dynamic-select"
+    required: true
+    placeholder:
+      en_US: "Select a Trello board"
+      zh_Hans: "选择一个 Trello 看板"
+      ja_JP: "Trello ボードを選択"
+      ko_KR: "Trello 보드 선택"
+    description:
+      en_US: "The Trello board to watch. A webhook is created on this board and fires on its card, comment, attachment and checklist activity."
+      zh_Hans: "要监听的 Trello 看板。将在该看板上创建 Webhook，并在其卡片、评论、附件、检查项活动时触发。"
+      ja_JP: "監視する Trello ボード。このボードに Webhook を作成し、カード・コメント・添付ファイル・チェックリストのアクティビティで発火します。"
+      ko_KR: "감시할 Trello 보드. 이 보드에 웹훅을 생성하고 카드, 댓글, 첨부 파일, 체크리스트 활동 시 트리거됩니다."
+  credentials_schema:
+    trello_api_key:
+      type: secret-input
+      required: true
+      label:
+        en_US: Trello API Key
+        zh_Hans: Trello API Key
+        ja_JP: Trello API キー
+        ko_KR: Trello API 키
+      placeholder:
+        en_US: Enter your Trello API key
+        zh_Hans: 输入您的 Trello API key
+        ja_JP: Trello API キーを入力してください
+        ko_KR: Trello API 키를 입력하세요
+      help:
+        en_US: Get your API key from the Trello Power-Ups admin portal.
+        zh_Hans: 从 Trello Power-Ups 管理门户获取您的 API key。
+        ja_JP: Trello Power-Ups 管理ポータルから API キーを取得してください。
+        ko_KR: Trello Power-Ups 관리 포털에서 API 키를 받으세요.
+      url: https://trello.com/power-ups/admin
+    trello_api_token:
+      type: secret-input
+      required: true
+      label:
+        en_US: Trello API Token
+        zh_Hans: Trello API Token
+        ja_JP: Trello API トークン
+        ko_KR: Trello API 토큰
+      placeholder:
+        en_US: Enter your Trello API token
+        zh_Hans: 输入您的 Trello API token
+        ja_JP: Trello API トークンを入力してください
+        ko_KR: Trello API 토큰을 입력하세요
+      help:
+        en_US: Authorize your API key to generate a token with read and webhook access.
+        zh_Hans: 授权您的 API key 以生成具有读取和 Webhook 权限的 token。
+        ja_JP: API キーを認可して、読み取りと Webhook 権限を持つトークンを生成してください。
+        ko_KR: API 키를 인증하여 읽기 및 웹훅 권한이 있는 토큰을 생성하세요.
+      url: https://trello.com/power-ups/admin
+  extra:
+    python:
+      source: provider/trello.py
+events:
+- events/card_created/card_created.yaml
+- events/card_updated/card_updated.yaml
+- events/card_moved/card_moved.yaml
+- events/card_deleted/card_deleted.yaml
+- events/comment_added/comment_added.yaml
+- events/attachment_added/attachment_added.yaml
+- events/checklist_item_created/checklist_item_created.yaml
+- events/checklist_item_updated/checklist_item_updated.yaml
+identity:
+  author: langgenius
+  name: trello_trigger
+  label:
+    en_US: Trello Trigger
+    zh_Hans: Trello 触发器
+    ja_JP: Trello トリガー
+    ko_KR: Trello 트리거
+  description:
+    en_US: Trigger Dify workflows from Trello board events (cards, comments, attachments, checklists) via webhooks.
+    zh_Hans: 通过 Webhook 由 Trello 看板事件（卡片、评论、附件、检查项）触发 Dify 工作流。
+    ja_JP: Webhook を通じて Trello ボードのイベント（カード、コメント、添付ファイル、チェックリスト）から Dify ワークフローをトリガーします。
+    ko_KR: 웹훅을 통해 Trello 보드 이벤트(카드, 댓글, 첨부 파일, 체크리스트)로 Dify 워크플로를 트리거합니다.
+  icon: icon.svg
+extra:
+  python:
+    source: provider/trello.py

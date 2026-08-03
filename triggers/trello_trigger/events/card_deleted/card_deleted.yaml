@@ -1,0 +1,90 @@
+identity:
+  name: card_deleted
+  author: langgenius
+  label:
+    en_US: Card Deleted
+    zh_Hans: 卡片删除
+    ja_JP: カード削除
+    ko_KR: 카드 삭제
+description:
+  en_US: Fires when a card is deleted from the board.
+  zh_Hans: 当卡片从看板中删除时触发。
+  ja_JP: ボードからカードが削除されたときに発火します。
+  ko_KR: 보드에서 카드가 삭제될 때 실행됩니다.
+parameters: []
+output_schema:
+  type: object
+  properties:
+    model:
+      type: object
+      description: The board the webhook is attached to.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+    action:
+      type: object
+      description: The Trello action that triggered this event.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        idMemberCreator:
+          type: string
+        memberCreator:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            fullName:
+              type: string
+            avatarUrl:
+              type:
+              - string
+              - "null"
+        data:
+          type: object
+          properties:
+            card:
+              type: object
+              properties:
+                id:
+                  type: string
+                idShort:
+                  type: integer
+                shortLink:
+                  type: string
+            list:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+            board:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                shortLink:
+                  type: string
+      required:
+      - id
+      - type
+      - data
+  required:
+  - action
+extra:
+  python:
+    source: events/card_deleted/card_deleted.py

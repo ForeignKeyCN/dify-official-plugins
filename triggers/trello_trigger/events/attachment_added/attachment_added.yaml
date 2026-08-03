@@ -1,0 +1,94 @@
+identity:
+  name: attachment_added
+  author: langgenius
+  label:
+    en_US: Attachment Added
+    zh_Hans: 附件添加
+    ja_JP: 添付ファイル追加
+    ko_KR: 첨부 파일 추가
+description:
+  en_US: Fires when an attachment is added to a card.
+  zh_Hans: 当向卡片添加附件时触发。
+  ja_JP: カードに添付ファイルが追加されたときに発火します。
+  ko_KR: 카드에 첨부 파일이 추가될 때 실행됩니다.
+parameters: []
+output_schema:
+  type: object
+  properties:
+    model:
+      type: object
+      description: The board the webhook is attached to.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+    action:
+      type: object
+      description: The Trello action that triggered this event.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        idMemberCreator:
+          type: string
+        memberCreator:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            fullName:
+              type: string
+            avatarUrl:
+              type:
+              - string
+              - "null"
+        data:
+          type: object
+          properties:
+            attachment:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                url:
+                  type: string
+            card:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                idShort:
+                  type: integer
+                shortLink:
+                  type: string
+            board:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                shortLink:
+                  type: string
+      required:
+      - id
+      - type
+      - data
+  required:
+  - action
+extra:
+  python:
+    source: events/attachment_added/attachment_added.py

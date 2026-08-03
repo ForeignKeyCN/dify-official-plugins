@@ -1,0 +1,40 @@
+version: 0.0.1
+type: plugin
+author: langgenius
+name: trello_trigger
+label:
+  en_US: Trello Trigger
+  zh_Hans: Trello 触发器
+  ja_JP: Trello トリガー
+  ko_KR: Trello 트리거
+description:
+  en_US: Trigger Dify workflows from Trello board events (cards, comments, attachments, checklists) via webhooks.
+  zh_Hans: 通过 Webhook 由 Trello 看板事件（卡片、评论、附件、检查项）触发 Dify 工作流。
+  ja_JP: Webhook を通じて Trello ボードのイベント（カード、コメント、添付ファイル、チェックリスト）から Dify ワークフローをトリガーします。
+  ko_KR: 웹훅을 통해 Trello 보드 이벤트(카드, 댓글, 첨부 파일, 체크리스트)로 Dify 워크플로를 트리거합니다.
+icon: icon.svg
+icon_dark: icon-dark.svg
+resource:
+  memory: 268435456
+  permission:
+    storage:
+      enabled: true
+      size: 1048576
+plugins:
+  triggers:
+    - provider/trello.yaml
+tags:
+  - productivity
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.10.0
+created_at: 2026-08-02T18:35:35.00711+09:00
+privacy: PRIVACY.md
+verified: false
