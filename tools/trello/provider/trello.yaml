@@ -62,3 +62,9 @@ tools:
 - tools/delete_card.yaml
 - tools/fetch_all_boards.yaml
 - tools/get_board_actions.yaml
+- tools/get_card.yaml
+- tools/add_comment_to_card.yaml
+- tools/add_attachment_to_card.yaml
+- tools/create_checklist.yaml
+- tools/create_checklist_item.yaml
+- tools/delete_checklist_item.yaml

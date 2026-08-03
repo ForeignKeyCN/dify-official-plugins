@@ -1,0 +1,46 @@
+description:
+  human:
+    en_US: Adds a comment to a Trello card identified by its ID. Useful for recording
+      notes, updates, or discussion directly on a card.
+    pt_BR: Adiciona um comentário a um cartão Trello identificado por seu ID. Útil
+      para registrar notas, atualizações ou discussões diretamente em um cartão.
+    zh_Hans: 向由 ID 标识的 Trello 卡片添加评论。便于直接在卡片上记录笔记、更新或讨论。
+  llm: Post a comment on a specific Trello card by providing the card ID and the comment
+    text. Ideal for collaboration and tracking progress on cards.
+extra:
+  python:
+    source: tools/add_comment_to_card.py
+identity:
+  author: langgenius
+  label:
+    en_US: Add Comment to Card
+    pt_BR: Adicionar Comentário ao Cartão
+    zh_Hans: 向卡片添加评论
+  name: add_comment_to_card
+parameters:
+- form: llm
+  human_description:
+    en_US: The unique identifier of the Trello card to add the comment to.
+    pt_BR: O identificador único do cartão Trello ao qual adicionar o comentário.
+    zh_Hans: 要添加评论的 Trello 卡片的唯一标识符。
+  label:
+    en_US: Card ID
+    pt_BR: ID do Cartão
+    zh_Hans: 卡片 ID
+  llm_description: Input the ID of the Trello card where the comment should be added.
+  name: id
+  required: true
+  type: string
+- form: llm
+  human_description:
+    en_US: The text content of the comment to add to the card.
+    pt_BR: O conteúdo de texto do comentário a ser adicionado ao cartão.
+    zh_Hans: 要添加到卡片的评论的文本内容。
+  label:
+    en_US: Comment Text
+    pt_BR: Texto do Comentário
+    zh_Hans: 评论文本
+  llm_description: Provide the text content of the comment to post on the card.
+  name: text
+  required: true
+  type: string

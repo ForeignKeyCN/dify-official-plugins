@@ -1,0 +1,46 @@
+description:
+  human:
+    en_US: Deletes an item from a Trello checklist using the checklist ID and the check
+      item ID. Useful for removing subtasks that are no longer needed.
+    pt_BR: Exclui um item de uma lista de verificação Trello usando o ID da lista de
+      verificação e o ID do item. Útil para remover subtarefas que não são mais necessárias.
+    zh_Hans: 使用清单 ID 和条目 ID 从 Trello 清单中删除条目。便于移除不再需要的子任务。
+  llm: Remove a specific item from a Trello checklist by providing the checklist ID
+    and the check item ID.
+extra:
+  python:
+    source: tools/delete_checklist_item.py
+identity:
+  author: langgenius
+  label:
+    en_US: Delete Checklist Item
+    pt_BR: Deletar Item de Lista de Verificação
+    zh_Hans: 删除清单条目
+  name: delete_checklist_item
+parameters:
+- form: llm
+  human_description:
+    en_US: The unique identifier of the Trello checklist containing the item.
+    pt_BR: O identificador único da lista de verificação Trello que contém o item.
+    zh_Hans: 包含该条目的 Trello 清单的唯一标识符。
+  label:
+    en_US: Checklist ID
+    pt_BR: ID da Lista de Verificação
+    zh_Hans: 清单 ID
+  llm_description: Input the ID of the Trello checklist that contains the item to delete.
+  name: idChecklist
+  required: true
+  type: string
+- form: llm
+  human_description:
+    en_US: The unique identifier of the checklist item to delete.
+    pt_BR: O identificador único do item de lista de verificação a ser excluído.
+    zh_Hans: 要删除的清单条目的唯一标识符。
+  label:
+    en_US: Check Item ID
+    pt_BR: ID do Item
+    zh_Hans: 条目 ID
+  llm_description: Input the ID of the checklist item targeted for deletion.
+  name: idCheckItem
+  required: true
+  type: string

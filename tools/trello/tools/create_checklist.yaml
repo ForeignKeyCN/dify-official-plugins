@@ -1,0 +1,46 @@
+description:
+  human:
+    en_US: Creates a new checklist on a Trello card identified by its ID, using the
+      specified checklist name.
+    pt_BR: Cria uma nova lista de verificação em um cartão Trello identificado por
+      seu ID, usando o nome de lista de verificação especificado.
+    zh_Hans: 使用指定的清单名称在由 ID 标识的 Trello 卡片上创建新清单。
+  llm: Add a new checklist to a specific Trello card by providing the card ID and a
+    name for the checklist. Useful for breaking a card down into subtasks.
+extra:
+  python:
+    source: tools/create_checklist.py
+identity:
+  author: langgenius
+  label:
+    en_US: Create Checklist
+    pt_BR: Criar Lista de Verificação
+    zh_Hans: 创建清单
+  name: create_checklist
+parameters:
+- form: llm
+  human_description:
+    en_US: The unique identifier of the Trello card to add the checklist to.
+    pt_BR: O identificador único do cartão Trello ao qual adicionar a lista de verificação.
+    zh_Hans: 要添加清单的 Trello 卡片的唯一标识符。
+  label:
+    en_US: Card ID
+    pt_BR: ID do Cartão
+    zh_Hans: 卡片 ID
+  llm_description: Input the ID of the Trello card where the checklist should be created.
+  name: id
+  required: true
+  type: string
+- form: llm
+  human_description:
+    en_US: The name of the checklist to create.
+    pt_BR: O nome da lista de verificação a ser criada.
+    zh_Hans: 要创建的清单的名称。
+  label:
+    en_US: Checklist Name
+    pt_BR: Nome da Lista de Verificação
+    zh_Hans: 清单名称
+  llm_description: Provide a name for the checklist to be created on the card.
+  name: name
+  required: true
+  type: string

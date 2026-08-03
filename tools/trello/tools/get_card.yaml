@@ -1,0 +1,34 @@
+description:
+  human:
+    en_US: Retrieves a Trello card using its unique ID or shortLink, returning the
+      card's full details such as name, description, list, and more.
+    pt_BR: Recupera um cartão Trello usando seu ID único ou shortLink, retornando os
+      detalhes completos do cartão, como nome, descrição, lista e mais.
+    zh_Hans: 使用唯一 ID 或 shortLink 检索 Trello 卡片，返回卡片的完整详情，如名称、描述、列表等。
+  llm: Fetch the complete details of a specific Trello card by providing its ID or
+    shortLink. Useful for inspecting a card's current state and contents.
+extra:
+  python:
+    source: tools/get_card.py
+identity:
+  author: langgenius
+  label:
+    en_US: Get Card
+    pt_BR: Obter Cartão
+    zh_Hans: 获取卡片
+  name: get_card
+parameters:
+- form: llm
+  human_description:
+    en_US: The unique identifier or shortLink of the Trello card you wish to retrieve.
+    pt_BR: O identificador único ou shortLink do cartão Trello que você deseja recuperar.
+    zh_Hans: 您希望检索的 Trello 卡片的唯一标识符或 shortLink。
+  label:
+    en_US: Card ID
+    pt_BR: ID do Cartão
+    zh_Hans: 卡片 ID
+  llm_description: Input the ID or shortLink of the Trello card to retrieve its full
+    details.
+  name: id
+  required: true
+  type: string
