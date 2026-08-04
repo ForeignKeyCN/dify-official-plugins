@@ -64,29 +64,6 @@ class SlackClient:
         """Validate the token and return the authed identity (team, user, etc.)."""
         return self.api_call("auth.test")
 
-    def list_channel_options(
-        self, types: str = "public_channel,private_channel", max_pages: int = 10
-    ) -> list[dict[str, str]]:
-        """Return channels the token can access as [{'id','name'}], paginated.
-
-        Used to populate dynamic-select channel parameters in the tools.
-        """
-        options: list[dict[str, str]] = []
-        cursor: Optional[str] = None
-        for _ in range(max_pages):
-            resp = self.api_call(
-                "conversations.list",
-                {"types": types, "limit": 200, "cursor": cursor, "exclude_archived": True},
-            )
-            for ch in resp.get("channels", []):
-                cid = ch.get("id")
-                if cid:
-                    options.append({"id": cid, "name": ch.get("name") or cid})
-            cursor = (resp.get("response_metadata") or {}).get("next_cursor") or None
-            if not cursor:
-                break
-        return options
-
     def _form_call(self, method: str, data: dict[str, Any]) -> dict[str, Any]:
         """Call a Slack Web API method with a form-encoded body (Bearer auth)."""
         body = {k: v for k, v in data.items() if v is not None}
@@ -160,38 +137,3 @@ class SlackClient:
             },
         )
 
-
-class ChannelSelectMixin:
-    """Mixin for Tools whose `channel` parameter is a dynamic-select.
-
-    Implements `_fetch_parameter_options` so Dify can populate the dropdown with
-    every channel the configured access token can see.
-    """
-
-    def _fetch_parameter_options(self, parameter: str):
-        from dify_plugin.entities import I18nObject, ParameterOption
-
-        if parameter != "channel":
-            return []
-        token = (self.runtime.credentials or {}).get("access_token")
-        if not token:
-            raise ValueError("A Slack Access Token is required to list channels.")
-        try:
-            channels = SlackClient(token).list_channel_options()
-        except SlackApiError as e:
-            # Surface the real reason (e.g. missing_scope) instead of an empty dropdown.
-            resp = e.response or {}
-            detail = ""
-            if resp.get("needed") is not None or resp.get("provided") is not None:
-                detail = (
-                    f" (needed: {resp.get('needed')}; provided: {resp.get('provided')})"
-                )
-            raise ValueError(
-                f"Could not list channels: {e.slack_error}{detail}. "
-                "Ensure the token has the 'channels:read' and 'groups:read' scopes, "
-                "then reinstall the app."
-            )
-        return [
-            ParameterOption(value=c["id"], label=I18nObject(en_us=c["name"]))
-            for c in channels
-        ]
