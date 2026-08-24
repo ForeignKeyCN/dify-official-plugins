@@ -1,0 +1,49 @@
+identity:
+  name: get_lead
+  author: langgenius
+  label:
+    en_US: Get Lead
+    zh_Hans: 获取线索
+    pt_BR: Obter Lead
+    ja_JP: リードを取得
+description:
+  human:
+    en_US: Retrieve a lead from HubSpot by ID
+    zh_Hans: 通过 ID 从 HubSpot 获取线索
+    pt_BR: Recuperar um lead do HubSpot por ID
+    ja_JP: ID を指定して HubSpot からリードを取得します
+  llm: Retrieves a single HubSpot lead by its id. Optionally specify which properties to return.
+parameters:
+  - name: lead_id
+    type: string
+    required: true
+    label:
+      en_US: Lead ID
+      zh_Hans: 线索 ID
+      pt_BR: ID do Lead
+      ja_JP: リード ID
+    human_description:
+      en_US: The ID of the lead to retrieve
+      zh_Hans: 要获取的线索的 ID
+      pt_BR: O ID do lead a recuperar
+      ja_JP: 取得するリードの ID
+    llm_description: The HubSpot ID of the lead to retrieve.
+    form: llm
+  - name: properties
+    type: string
+    required: false
+    label:
+      en_US: Properties
+      zh_Hans: 返回属性
+      pt_BR: Propriedades
+      ja_JP: 取得プロパティ
+    human_description:
+      en_US: Comma-separated property names to return
+      zh_Hans: 要返回的属性名，逗号分隔
+      pt_BR: Nomes de propriedades a retornar, separados por vírgula
+      ja_JP: 返すプロパティ名（カンマ区切り）
+    llm_description: Optional comma-separated list of properties to include in the result.
+    form: llm
+extra:
+  python:
+    source: tools/get_lead.py

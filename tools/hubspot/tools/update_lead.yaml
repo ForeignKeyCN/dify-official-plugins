@@ -1,0 +1,64 @@
+identity:
+  name: update_lead
+  author: langgenius
+  label:
+    en_US: Update Lead
+    zh_Hans: 更新线索
+    pt_BR: Atualizar Lead
+    ja_JP: リードを更新
+description:
+  human:
+    en_US: Update an existing lead in HubSpot
+    zh_Hans: 更新 HubSpot 中的现有线索
+    pt_BR: Atualizar um lead existente no HubSpot
+    ja_JP: HubSpot の既存のリードを更新します
+  llm: Updates a lead in HubSpot CRM by its id. Provide a lead name and/or a JSON object of additional properties to merge.
+parameters:
+  - name: lead_id
+    type: string
+    required: true
+    label:
+      en_US: Lead ID
+      zh_Hans: 线索 ID
+      pt_BR: ID do Lead
+      ja_JP: リード ID
+    human_description:
+      en_US: The ID of the lead to update
+      zh_Hans: 要更新的线索的 ID
+      pt_BR: O ID do lead a atualizar
+      ja_JP: 更新するリードの ID
+    llm_description: The HubSpot ID of the lead to update.
+    form: llm
+  - name: lead_name
+    type: string
+    required: false
+    label:
+      en_US: Lead Name
+      zh_Hans: 线索名称
+      pt_BR: Nome do Lead
+      ja_JP: リード名
+    human_description:
+      en_US: A display name for the lead
+      zh_Hans: 线索的显示名称
+      pt_BR: Um nome de exibição para o lead
+      ja_JP: リードの表示名
+    llm_description: A display name for the lead (maps to hs_lead_name).
+    form: llm
+  - name: properties
+    type: string
+    required: false
+    label:
+      en_US: Additional Properties (JSON)
+      zh_Hans: 附加属性（JSON）
+      pt_BR: Propriedades Adicionais (JSON)
+      ja_JP: 追加プロパティ（JSON）
+    human_description:
+      en_US: A JSON object of additional lead properties to merge
+      zh_Hans: 要合并的附加线索属性的 JSON 对象
+      pt_BR: Um objeto JSON com propriedades adicionais do lead a mesclar
+      ja_JP: マージする追加のリードプロパティの JSON オブジェクト
+    llm_description: Optional JSON object of extra HubSpot lead properties to merge, e.g. {"hs_lead_type":"NEW_BUSINESS"}.
+    form: llm
+extra:
+  python:
+    source: tools/update_lead.py

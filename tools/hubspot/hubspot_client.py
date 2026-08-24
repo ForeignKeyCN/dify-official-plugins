@@ -112,6 +112,18 @@ class HubSpotClient:
             body["filterGroups"] = [{"filters": [f]}]
         return self._request("POST", f"/crm/v3/objects/{obj}/search", json=body)
 
+    # --- Associations (v4 default) ---
+    def associate_default(self, from_obj: str, from_id: str, to_obj: str, to_id: str) -> dict[str, Any]:
+        """Create the HubSpot-defined default association between two records.
+
+        Uses the v4 default endpoint so callers don't need to know association
+        type IDs (used e.g. to link a new lead to its contact/company).
+        """
+        return self._request(
+            "PUT",
+            f"/crm/v4/objects/{from_obj}/{from_id}/associations/default/{to_obj}/{to_id}",
+        )
+
     # --- Contact list membership (v3 lists) ---
     def add_to_list(self, list_id: str, record_ids: list[str]) -> dict[str, Any]:
         return self._request("PUT", f"/crm/v3/lists/{list_id}/memberships/add", json=record_ids)

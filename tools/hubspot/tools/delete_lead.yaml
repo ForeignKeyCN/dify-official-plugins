@@ -1,0 +1,34 @@
+identity:
+  name: delete_lead
+  author: langgenius
+  label:
+    en_US: Delete Lead
+    zh_Hans: 删除线索
+    pt_BR: Excluir Lead
+    ja_JP: リードを削除
+description:
+  human:
+    en_US: Delete a lead in HubSpot
+    zh_Hans: 删除 HubSpot 中的线索
+    pt_BR: Excluir um lead no HubSpot
+    ja_JP: HubSpot のリードを削除します
+  llm: Deletes a lead in HubSpot CRM by its id.
+parameters:
+  - name: lead_id
+    type: string
+    required: true
+    label:
+      en_US: Lead ID
+      zh_Hans: 线索 ID
+      pt_BR: ID do Lead
+      ja_JP: リード ID
+    human_description:
+      en_US: The ID of the lead to delete
+      zh_Hans: 要删除的线索的 ID
+      pt_BR: O ID do lead a excluir
+      ja_JP: 削除するリードの ID
+    llm_description: The HubSpot ID of the lead to delete.
+    form: llm
+extra:
+  python:
+    source: tools/delete_lead.py

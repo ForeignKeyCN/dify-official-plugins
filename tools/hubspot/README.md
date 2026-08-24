@@ -8,6 +8,7 @@ Integrate HubSpot CRM with Dify — manage contacts, companies, deals, tickets, 
 **Companies** — Create, Update, Delete, Get, **Search**
 **Deals** — Create, Update, Delete, Get, **Search**
 **Tickets** — Create, Update, Delete, Get, **Search**
+**Leads** — Create (optionally linked to a contact/company), Update, Delete, Get, **Search**
 **Engagements** (notes / tasks / meetings / calls / emails) — Create, Get, **Search**, Delete
 **Contact Lists** — Add contacts to a list, Remove contacts from a list
 **Forms** — Get form (fields), Submit form
@@ -32,6 +33,7 @@ Create a **HubSpot Private App** and copy its access token:
    - `crm.objects.companies.read` / `.write`
    - `crm.objects.deals.read` / `.write`
    - `crm.objects.tickets.read` / `.write`
+   - `crm.objects.leads.read` / `.write`
    - (lists/forms as needed)
 3. Create the app and copy the **access token**.
 4. In Dify, paste it into the plugin's **API Access Token** field.

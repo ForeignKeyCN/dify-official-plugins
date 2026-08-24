@@ -1,0 +1,79 @@
+identity:
+  name: create_lead
+  author: langgenius
+  label:
+    en_US: Create Lead
+    zh_Hans: 创建线索
+    pt_BR: Criar Lead
+    ja_JP: リードを作成
+description:
+  human:
+    en_US: Create a new lead in HubSpot, optionally linked to a contact or company
+    zh_Hans: 在 HubSpot 中创建新线索，可选择关联联系人或公司
+    pt_BR: Criar um novo lead no HubSpot, opcionalmente vinculado a um contato ou empresa
+    ja_JP: HubSpot に新しいリードを作成します（連絡先や会社への関連付けは任意）
+  llm: Creates a lead in HubSpot CRM. Provide a lead name and/or a JSON object of additional properties. A lead should be associated with a contact and/or company - pass their IDs to link them.
+parameters:
+  - name: lead_name
+    type: string
+    required: false
+    label:
+      en_US: Lead Name
+      zh_Hans: 线索名称
+      pt_BR: Nome do Lead
+      ja_JP: リード名
+    human_description:
+      en_US: A display name for the lead
+      zh_Hans: 线索的显示名称
+      pt_BR: Um nome de exibição para o lead
+      ja_JP: リードの表示名
+    llm_description: A display name for the lead (maps to hs_lead_name).
+    form: llm
+  - name: associated_contact_id
+    type: string
+    required: false
+    label:
+      en_US: Associated Contact ID
+      zh_Hans: 关联联系人 ID
+      pt_BR: ID do Contato Associado
+      ja_JP: 関連付ける連絡先 ID
+    human_description:
+      en_US: ID of a contact to link this lead to
+      zh_Hans: 要关联到此线索的联系人 ID
+      pt_BR: ID de um contato para vincular a este lead
+      ja_JP: このリードに関連付ける連絡先の ID
+    llm_description: Optional HubSpot contact ID to associate with the new lead.
+    form: llm
+  - name: associated_company_id
+    type: string
+    required: false
+    label:
+      en_US: Associated Company ID
+      zh_Hans: 关联公司 ID
+      pt_BR: ID da Empresa Associada
+      ja_JP: 関連付ける会社 ID
+    human_description:
+      en_US: ID of a company to link this lead to
+      zh_Hans: 要关联到此线索的公司 ID
+      pt_BR: ID de uma empresa para vincular a este lead
+      ja_JP: このリードに関連付ける会社の ID
+    llm_description: Optional HubSpot company ID to associate with the new lead.
+    form: llm
+  - name: properties
+    type: string
+    required: false
+    label:
+      en_US: Additional Properties (JSON)
+      zh_Hans: 附加属性（JSON）
+      pt_BR: Propriedades Adicionais (JSON)
+      ja_JP: 追加プロパティ（JSON）
+    human_description:
+      en_US: A JSON object of additional lead properties
+      zh_Hans: 附加线索属性的 JSON 对象
+      pt_BR: Um objeto JSON com propriedades adicionais do lead
+      ja_JP: 追加のリードプロパティの JSON オブジェクト
+    llm_description: Optional JSON object of extra HubSpot lead properties, e.g. {"hs_lead_type":"NEW_BUSINESS"}.
+    form: llm
+extra:
+  python:
+    source: tools/create_lead.py
