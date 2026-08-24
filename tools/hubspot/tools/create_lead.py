@@ -41,25 +41,37 @@ class CreateLeadTool(Tool):
             return
 
         lead_id = result.get("id")
-
-        # A lead should be associated with a contact and/or company.
-        linked = []
-        contact_id = (tool_parameters.get("associated_contact_id") or "").strip()
-        company_id = (tool_parameters.get("associated_company_id") or "").strip()
-        try:
-            if contact_id:
-                client.associate_default("leads", lead_id, "contacts", contact_id)
-                linked.append(f"contact {contact_id}")
-            if company_id:
-                client.associate_default("leads", lead_id, "companies", company_id)
-                linked.append(f"company {company_id}")
-        except HubSpotError as e:
+        if not lead_id:
+            # Creation succeeded (no HubSpotError) but we can't associate without an id.
             yield self.create_text_message(
-                f"Lead created (id: {lead_id}) but association failed: {e.message}"
+                "Lead created, but HubSpot returned no id so associations were skipped."
             )
             yield self.create_json_message(result)
             return
 
-        suffix = f", linked to {', '.join(linked)}" if linked else ""
-        yield self.create_text_message(f"Lead created (id: {lead_id}){suffix}.")
+        # A lead should be associated with a contact and/or company. Each link is
+        # attempted independently so one failure never hides the other's outcome.
+        # The lead already exists at this point, so we never re-create it - we just
+        # report which links succeeded and which failed, with HubSpot's reason.
+        linked: list[str] = []
+        failed: list[str] = []
+        targets = [
+            ("contacts", (tool_parameters.get("associated_contact_id") or "").strip(), "contact"),
+            ("companies", (tool_parameters.get("associated_company_id") or "").strip(), "company"),
+        ]
+        for to_obj, to_id, noun in targets:
+            if not to_id:
+                continue
+            try:
+                client.associate_default("leads", lead_id, to_obj, to_id)
+                linked.append(f"{noun} {to_id}")
+            except HubSpotError as e:
+                failed.append(f"{noun} {to_id} ({e.message})")
+
+        parts = [f"Lead created (id: {lead_id})"]
+        if linked:
+            parts.append(f"linked to {', '.join(linked)}")
+        if failed:
+            parts.append(f"but failed to link {', '.join(failed)} - link it manually or retry the association")
+        yield self.create_text_message(". ".join(parts) + ".")
         yield self.create_json_message(result)
