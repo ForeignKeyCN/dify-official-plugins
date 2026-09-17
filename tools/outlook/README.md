@@ -17,7 +17,7 @@ Dify's integration with Microsoft Outlook (via Microsoft Graph) for **email and 
 
 ### Calendar (new in 0.3.0)
 - **List Calendars** — list your calendars.
-- **List Events** — list upcoming events (optionally from a specific calendar).
+- **List Events** — list events, latest start time first (optionally from a specific calendar). Takes a single **Limit** (1–100, default 10), the same input as **List Messages**.
 - **Create Event** — create a meeting/appointment (supports attendees, location and a Teams online meeting).
 - **Get Event** — get a single event by ID.
 - **Update Event** — update fields of an event.

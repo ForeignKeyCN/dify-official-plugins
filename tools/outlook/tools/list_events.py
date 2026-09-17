@@ -12,11 +12,19 @@ class ListEventsTool(Tool):
         List calendar events from Outlook using Microsoft Graph API
         """
         try:
-            top = tool_parameters.get("top") or 25
+            # "top" is accepted for nodes saved before 0.6.0, when this parameter was renamed.
+            raw_limit = tool_parameters.get("limit")
+            if raw_limit in (None, ""):
+                raw_limit = tool_parameters.get("top")
+            try:
+                limit = int(raw_limit) if raw_limit not in (None, "") else 10
+            except (TypeError, ValueError):
+                yield self.create_text_message("Limit must be a whole number between 1 and 100.")
+                return
+            if limit < 1 or limit > 100:
+                yield self.create_text_message("Limit must be between 1 and 100.")
+                return
             calendar_id = tool_parameters.get("calendar_id")
-            order = (tool_parameters.get("order") or "desc").lower()
-            if order not in ("asc", "desc"):
-                order = "desc"
 
             access_token = self.runtime.credentials.get("access_token")
             if not access_token:
@@ -34,8 +42,8 @@ class ListEventsTool(Tool):
                 url = "https://graph.microsoft.com/v1.0/me/events"
 
             params = {
-                "$top": int(top),
-                "$orderby": f"start/dateTime {order}",
+                "$top": limit,
+                "$orderby": "start/dateTime desc",
                 "$select": "id,subject,start,end,organizer,webLink"
             }
 
