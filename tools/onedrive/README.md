@@ -105,8 +105,18 @@ The first time a user needs OneDrive, the tool returns a Microsoft sign-in link 
 1. In the app registration, add the **Delegated** Microsoft Graph permissions `User.Read`, `Files.Read.All`, `Files.ReadWrite.All` and `offline_access` (search for `User.Read`, `Files.` and `offline`), and click **Grant admin consent** so users never see a consent screen.
 2. In Dify, open the OneDrive plugin's details → **Endpoints**, click **+**, enter a name (nothing else to fill in), and copy the endpoint URL. It looks like `https://<your-dify-domain>/e/<id>/onedrive/callback`.
    If it starts with `http://localhost`, your self-hosted Dify still uses the default `ENDPOINT_URL_TEMPLATE=http://localhost/e/{hook_id}`: set `ENDPOINT_URL_TEMPLATE=https://<your-dify-domain>/e/{hook_id}` in `docker/.env` and restart the API (`docker compose up -d api`), or replace `http://localhost` with your Dify address by hand. Microsoft accepts `http` only for `localhost`.
+
+   ![Endpoint URL](_assets/dify-endpoint-url.png)
+
 3. In the app registration, open **Authentication** → **Add Redirect URI** → **Web**, paste the endpoint URL and click **Configure**. A mismatch shows up later as error `AADSTS50011` on the Microsoft sign-in page.
+
+   ![Add redirect URI](_assets/entra-redirect-uri.png)
+
 4. In Dify, click **Add API Key**, set **Mode** to *Each user signs in*, and fill in **Tenant ID**, **Client ID**, **Client Secret** (the secret's *Value*, not its Secret ID) and **Sign-in Callback URL**. Leave **Default Drive Owner** empty. On save, Dify checks the fields and, with a specific tenant ID, that Microsoft accepts the client ID and secret; no user's OneDrive is opened and no user token is stored in the authorization.
+
+   ![Authorization form, top](_assets/dify-per-user-form-top.png)
+   ![Authorization form, bottom: Default Drive Owner stays empty](_assets/dify-per-user-form-bottom.png)
+
 5. In the agent, add **OneDrive**, keep the tools you want and **Sign Out of OneDrive**, and choose this authorization in the credential menu. If the menu shows an OAuth authorization instead, the tools use that one shared OneDrive and no one is asked to sign in. Instructions like these work well:
 
 ```
@@ -116,6 +126,18 @@ You can use the OneDrive tools on the current user's own OneDrive.
 - Never make up files. If a tool returns an error, tell the user what it says.
 - If the user asks to sign out or switch accounts, call onedrive_sign_out.
 ```
+
+With Outlook and Teams in the same agent, each tool has its own per-user authorization:
+
+![Outlook, Teams and OneDrive, each with its own per-user authorization](_assets/agent-credentials.png)
+
+### What users see
+
+A file attached in the chat is uploaded after the user signs in once; later requests (a download link, signing out) need no new sign-in until they sign out.
+
+![Upload an attached file: sign-in link, then the upload](_assets/chat-upload-sign-in.png)
+
+![Download link, then sign out](_assets/chat-download-sign-out.png)
 
 Search works in this mode (it does not have the Service Principal limitation below): it runs as the user, with their delegated `Files.Read.All`.
 
