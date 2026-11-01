@@ -81,11 +81,24 @@ Typical flows: **List Teams** → **List Channels** → **Send Channel Message**
 The first time a user needs Teams, the tool returns a Microsoft sign-in link instead of data; the agent passes it on, the user signs in in the browser, comes back and says they are done, and the agent calls the tool again. From then on the tools act as that user, in later conversations too.
 
 1. In the app registration, add the **delegated** permissions listed above and click **Grant admin consent** (several of them need it, and users then never see a consent screen).
-2. In Dify, open the Teams plugin's details → **Endpoints**, add an endpoint (only a name is needed), and copy its URL ending in `/teams/callback`.
-   If it starts with `http://localhost`, your self-hosted Dify still uses the default `ENDPOINT_URL_TEMPLATE=http://localhost/e/{hook_id}`: set `ENDPOINT_URL_TEMPLATE=https://<your-dify-domain>/e/{hook_id}` in `docker/.env` and restart the API, or replace `http://localhost` with your Dify address by hand. Microsoft accepts `http` only for `localhost`.
-3. In the app registration, add that URL under **Authentication** → **Web** redirect URIs.
-4. Click **Add API Key**, keep **Mode** at *Each user signs in*, and fill in **Tenant ID**, **Client ID**, **Client Secret** and **Sign-in Callback URL**.
-5. In the agent, choose this authorization for Teams, and include **Sign Out of Teams**. Instructions like these work well:
+2. In Dify, open the Teams plugin's details → **Endpoints**, click **+**, enter a name (nothing else to fill in), and copy the endpoint URL with the copy button. It looks like `https://<your-dify-domain>/e/<id>/teams/callback`.
+
+   ![Endpoint URL](_assets/dify-endpoint-url.png)
+
+   If it starts with `http://localhost`, your self-hosted Dify still uses the default `ENDPOINT_URL_TEMPLATE=http://localhost/e/{hook_id}`: set `ENDPOINT_URL_TEMPLATE=https://<your-dify-domain>/e/{hook_id}` in `docker/.env` and restart the API (`docker compose up -d api`), or replace `http://localhost` with your Dify address by hand. Microsoft accepts `http` only for `localhost`.
+3. In the app registration, open **Authentication** → **Add Redirect URI** → **Web**, paste the endpoint URL and click **Configure**. A mismatch shows up later as error `AADSTS50011` on the Microsoft sign-in page.
+
+   ![Add redirect URI](_assets/entra-redirect-uri.png)
+
+4. In the Teams plugin's details, click **Add API Key**, keep **Mode** at *Each user signs in*, and fill in **Tenant ID**, **Client ID** and **Client Secret** from the app registration (copy the secret's *Value*, not its Secret ID).
+
+   ![Authorization form, top](_assets/dify-per-user-form-top.png)
+
+   Then paste the endpoint URL into **Sign-in Callback URL** (Dify rejects a `localhost` URL) and keep **Microsoft Cloud** at *Global* unless your tenant is in a national cloud. On save, Dify checks the fields and, with a specific tenant ID, that Microsoft accepts the client ID and secret; no user's data is read and no user token is stored in the authorization.
+
+   ![Authorization form, bottom](_assets/dify-per-user-form-bottom.png)
+
+5. In the agent, add **Microsoft Teams** under **TOOLS**, keep the tools you want and **Sign Out of Teams**, and choose this authorization in the credential menu next to Teams. If the menu shows an OAuth authorization instead, the tools act as that one shared account and no one is asked to sign in. Instructions like these work well:
 
    ```
    You can use the Microsoft Teams tools on behalf of the current user.
@@ -95,11 +108,46 @@ The first time a user needs Teams, the tool returns a Microsoft sign-in link ins
    - If the user asks to sign out or switch accounts, call teams_sign_out.
    ```
 
+### What users see
+
+1. The first Teams request returns a sign-in link, valid for 15 minutes. The user signs in with their own Microsoft account; a page titled **Signed in** asks them to go back to the chat (and to cancel if someone else sent them the link). They reply "done" and get the answer.
+
+   ![Sign-in link, then the answer](_assets/chat-sign-in-and-teams.png)
+
+2. From then on the tools act as that user, for example creating a Teams meeting with its join link.
+
+   ![Online meeting](_assets/chat-online-meeting.png)
+
+3. "Sign out of Teams" forgets their Teams sign-in; the next Teams request asks them to sign in again.
+
+   ![Sign out](_assets/chat-sign-out.png)
+
+### With Outlook in the same agent
+
+Outlook (1.0.0 and later) has the same *Each user signs in* mode. Each plugin keeps its own sign-in: a user signs in once for each, and signing out of one leaves the other signed in. With one app registration for both and admin consent, the second sign-in usually needs no password: the browser is already signed in to Microsoft, so the user only picks their account. Teams meetings are events in the Outlook calendar, so questions about the user's meetings belong to Outlook's calendar tools; this prompt routes requests between the two:
+
+```
+You can use the Outlook and Microsoft Teams tools on behalf of the current user, with their own Microsoft account.
+
+Which tools to use:
+- Schedule, meetings (including Teams meetings) and free time: Outlook calendar tools (list_events, search_events, get_schedule). Teams meetings are events in the Outlook calendar; list_events and search_events already show each event's location and join link, so do not open events one by one to check that.
+- Email: Outlook mail tools (list_messages, get_message). Create a draft instead of sending unless the user clearly asks you to send.
+- Teams, channels, chats and channel messages: Teams tools (list_teams, list_channels, list_chats, ...).
+- A new Teams meeting link without a calendar invitation: create_online_meeting. To invite people, create a calendar event with an online meeting instead (create_event).
+
+Sign-in:
+- Outlook and Teams each have their own sign-in. If a tool says the user needs to sign in and returns a link, give the link to the user exactly as returned, ask them to open it, sign in with their own Microsoft account and reply "done", then call the same tool again.
+- If the user asks to sign out or switch accounts, call outlook_sign_out for Outlook and teams_sign_out for Teams (both if they don't say which).
+
+Rules:
+- Before posting a message, creating a chat, meeting or event, or changing a task, tell the user what you are about to do.
+- Never make up emails, events or messages. If a tool returns an error, tell the user what it says.
+```
+
 How it works and what to know:
 - Each user's tokens are kept in the plugin's storage, encrypted with a key derived from the client secret. They never reach the agent or the logs. The endpoint only holds a one-time authorization code briefly; turning it into a token also needs the client secret and a PKCE verifier it never sees.
 - Users stay signed in while they keep using it (the access token is renewed hourly; Microsoft's refresh token expires after about 90 days unused). They sign in again after signing out, a password change, an administrator revoking their sessions, or a client secret rotation.
 - Users are told apart by Dify's user ID. It is stable in the console and for Service API callers that always send the same `user`; in a public web app without login, each browser is a new anonymous user. The Service API `user` value is chosen by the caller, so call the API only from a trusted backend.
-- The sign-in is separate from the Outlook plugin's: plugins cannot share tokens. With the same app registration and admin consent, signing in to the second plugin is one click.
 - A user could send their own sign-in link to a colleague, whose account would then be connected to the sender's chat. The **Signed in** page warns about this and offers to cancel; an administrator can end any connection by revoking the user's sessions in Entra.
 
 > Upgrading from 0.1.x: 0.2.0 asks for three more delegated permissions (`ChannelMessage.Read.All`, `OnlineMeetings.ReadWrite`, `Tasks.ReadWrite`). Add them to the app registration, grant consent, and re-authorize once. Existing authorizations keep working for the 0.1.x tools in the meantime.
