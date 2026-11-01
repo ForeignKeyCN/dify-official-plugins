@@ -149,11 +149,52 @@ Search for files or folders in OneDrive by name.
 - limit (number, optional): The maximum number of results to return (default: 10).
 
 ### upload_file
-Upload a file to the OneDrive root directory; a `file_name` such as `reports/q3.pdf` puts it in that folder.
+Upload a file, or save text as a file, to the OneDrive root or a folder; a `file_name` such as `reports/q3.pdf` puts it in that folder.
 
 **Parameters:**
-- file (file): The file to upload to OneDrive.
-- file_name (string, optional): Custom name for the uploaded file. If not provided, the original file name is used.
+- file (file, optional): The file to upload to OneDrive.
+- file_name (string, optional): Name for the uploaded file. With a file, empty keeps the original name; required with `file_content`.
+- file_content (string, optional, new in 1.0.0): Text to save as a UTF-8 file when no file is given, for example notes an agent was asked to save.
+- parent_folder_id (string, optional, new in 1.0.0): ID of the folder to upload into; empty for the root.
+
+### onedrive_list_folder (new in 1.0.0)
+List the files and folders directly inside a folder, with their IDs.
+
+**Parameters:**
+- folder_id (string, optional): The folder to list; empty or `root` for the root folder.
+- limit (number, optional): Maximum number of items, 1–200 (default 50).
+
+### onedrive_create_folder (new in 1.0.0)
+Create a folder. The name may be a path such as `Reports/2026`: missing folders along it are created and existing ones reused.
+
+**Parameters:**
+- name (string): Folder name or path.
+- parent_folder_id (string, optional): The folder to create it in; empty for the root.
+
+### onedrive_rename (new in 1.0.0)
+Rename a file or folder.
+
+**Parameters:**
+- item_id (string): The file or folder.
+- new_name (string): The new name, including the extension for a file.
+
+### onedrive_copy (new in 1.0.0)
+Copy a file or folder, into the same folder or another one, optionally under a new name; a name already taken gets a number appended. Small copies finish within the call; large ones continue in OneDrive and are reported as `in_progress`.
+
+**Parameters:**
+- file_id (string): The file or folder to copy.
+- name (string, optional): Name of the copy.
+- parent_folder_id (string, optional): Target folder; empty for the same folder, `root` for the root.
+
+### onedrive_share (new in 1.0.0)
+Create a sharing link for a file or folder.
+
+**Parameters:**
+- item_id (string): The file or folder.
+- type (select, optional): `view` (default, read-only), `edit`, or `embed` (personal OneDrive only).
+- scope (select, optional): `organization` (default, people in your organization) or `anonymous` (anyone with the link; administrators often turn these off).
+
+These five, with the existing tools, cover every operation of n8n's Microsoft OneDrive node (file: copy, delete, download, get, rename, search, share, upload; folder: create, delete, get children, rename, search, share). Their names carry an `onedrive_` prefix because Dify's agent requires tool names to be unique across all the plugins an agent uses.
 
 ### onedrive_sign_out
 *Each user signs in* only: forget the current user's OneDrive sign-in, for switching accounts. Other plugins (for example Outlook) keep their own sign-in. No parameters.
@@ -170,6 +211,11 @@ Besides `text` and `json` (unchanged), every tool returns typed variables that l
 | Delete File by ID | `file_id` |
 | Search File or Folder by Name | `items`, `count` |
 | Upload File | `file_id`, `name`, `size`, `web_url` |
+| List Folder | `items`, `count`, `has_more` |
+| Create Folder | `folder_id`, `name`, `web_url`, `created` |
+| Rename File or Folder | `file_id`, `name`, `is_folder`, `web_url` |
+| Copy File | `file_id`, `name`, `web_url`, `status` |
+| Create Sharing Link | `link_url`, `type`, `scope`, `permission_id` |
 | Sign Out of OneDrive | `signed_out` |
 
 ## PRIVACY

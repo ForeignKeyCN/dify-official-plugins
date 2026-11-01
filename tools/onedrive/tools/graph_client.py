@@ -256,19 +256,41 @@ def graph_request(
     *,
     params: Mapping[str, Any] | None = None,
     data: bytes | None = None,
+    json: Any = None,
     headers: Mapping[str, str] | None = None,
     timeout: int = 60,
 ) -> requests.Response:
     """Call a Graph URL with the context's token; network errors and non-2xx answers raise GraphAuthError."""
     all_headers = {"Authorization": f"Bearer {ctx.access_token}"}
     all_headers.update(headers or {})
+    extra = {"json": json} if json is not None else {}
     try:
-        response = requests.request(method, url, headers=all_headers, params=params, data=data, timeout=timeout)
+        response = requests.request(method, url, headers=all_headers, params=params, data=data, timeout=timeout, **extra)
     except requests.exceptions.RequestException as e:
         raise GraphAuthError(f"Network error: {e}") from e
     if response.status_code < 200 or response.status_code >= 300:
         raise GraphAuthError(describe_error(response))
     return response
+
+
+def item_url(ctx: GraphContext, item_id: Any) -> str:
+    """URL of a drive item by ID; empty or "root" means the drive's root folder."""
+    value = str(item_id or "").strip()
+    return f"{ctx.drive_base}/root" if value in ("", "root") else f"{ctx.drive_base}/items/{segment(value)}"
+
+
+def find_child(ctx: GraphContext, folder_id: Any, name: str) -> dict[str, Any] | None:
+    """The item called ``name`` directly inside a folder, or None when there is none."""
+    url = f"{item_url(ctx, folder_id)}:/{quote(name, safe='')}"
+    try:
+        response = requests.request("GET", url, headers={"Authorization": f"Bearer {ctx.access_token}"}, timeout=60)
+    except requests.exceptions.RequestException as e:
+        raise GraphAuthError(f"Network error: {e}") from e
+    if response.status_code == 404:
+        return None
+    if response.status_code < 200 or response.status_code >= 300:
+        raise GraphAuthError(describe_error(response))
+    return response.json()
 
 
 def describe_error(response: requests.Response) -> str:

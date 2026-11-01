@@ -266,6 +266,11 @@ tools:
 - tools/delete_file_by_id.yaml
 - tools/search_file.yaml
 - tools/upload_file.yaml
+- tools/onedrive_list_folder.yaml
+- tools/onedrive_create_folder.yaml
+- tools/onedrive_rename.yaml
+- tools/onedrive_copy.yaml
+- tools/onedrive_share.yaml
 - tools/onedrive_sign_out.yaml
 extra:
   python:
