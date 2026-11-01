@@ -32,7 +32,7 @@ class UploadFileTool(Tool):
             return
 
         try:
-            graph = resolve_graph_context(self.runtime.credentials, tool_parameters.get("drive_user"))
+            graph = resolve_graph_context(self.runtime.credentials, tool_parameters.get("drive_user"), tool=self)
             # Simple upload relative to the drive root; "/" in the name selects a folder path.
             path = quote(str(file_name).strip().lstrip("/"), safe="/")
             uploaded = graph_request(

@@ -2,12 +2,22 @@
 # Microsoft OneDrive Plugin
 
 **Author**: langgenius
-**Version**: 0.1.0
+**Version**: 1.0.0
 **Type**: plugin
 
 ## Introduction
 
 This plugin integrates with Microsoft OneDrive, enabling you to search, retrieve, upload, and delete files or folders directly from Dify. It allows automated file management and access to your OneDrive storage through Dify workflows.
+
+### Choose how to authorize
+
+| Mode | Whose OneDrive the tools use | Use it for |
+|---|---|---|
+| **OAuth** | The one person who signed in from the Dify console; everyone using the tool shares that OneDrive | A workflow or app that works on one known OneDrive |
+| **Service Principal** (0.1.0) | A user's OneDrive you name, accessed as the app itself; nobody signs in | Automation on a service account's or a team member's OneDrive |
+| **Each user signs in** (1.0.0) | The OneDrive of whoever is chatting with the agent; each user signs in once with their own Microsoft account | A chat agent that many people use ("find my Q3 report", "save this to my OneDrive") |
+
+All three use the same Microsoft Entra app registration and can exist side by side; pick one per agent or workflow node.
 
 ## Setup
 
@@ -88,6 +98,34 @@ The drive owner needs a license that includes OneDrive, and their OneDrive exist
 
 > **Known limitation — search with a Service Principal.** OneDrive search runs on SharePoint search. App-only tokens get `403 accessDenied` from it unless the app also has `Sites.Read.All`, and even with it Microsoft Graph may return an empty result for app-only requests (we saw this in our test tenant, for both drive search and the Microsoft Search API). Upload, Get File by ID and Delete File by ID are not affected. If you need search, use an OAuth authorization.
 
+## Each user signs in (for chat agents, new in 1.0.0)
+
+The first time a user needs OneDrive, the tool returns a Microsoft sign-in link instead of data; the agent passes it on, the user signs in in the browser, comes back and says they are done, and the agent calls the tool again. From then on the tools act on that user's own OneDrive, in later conversations too.
+
+1. In the app registration, add the **Delegated** Microsoft Graph permissions `User.Read`, `Files.Read.All`, `Files.ReadWrite.All` and `offline_access` (search for `User.Read`, `Files.` and `offline`), and click **Grant admin consent** so users never see a consent screen.
+2. In Dify, open the OneDrive plugin's details → **Endpoints**, click **+**, enter a name (nothing else to fill in), and copy the endpoint URL. It looks like `https://<your-dify-domain>/e/<id>/onedrive/callback`.
+   If it starts with `http://localhost`, your self-hosted Dify still uses the default `ENDPOINT_URL_TEMPLATE=http://localhost/e/{hook_id}`: set `ENDPOINT_URL_TEMPLATE=https://<your-dify-domain>/e/{hook_id}` in `docker/.env` and restart the API (`docker compose up -d api`), or replace `http://localhost` with your Dify address by hand. Microsoft accepts `http` only for `localhost`.
+3. In the app registration, open **Authentication** → **Add Redirect URI** → **Web**, paste the endpoint URL and click **Configure**. A mismatch shows up later as error `AADSTS50011` on the Microsoft sign-in page.
+4. In Dify, click **Add API Key**, set **Mode** to *Each user signs in*, and fill in **Tenant ID**, **Client ID**, **Client Secret** (the secret's *Value*, not its Secret ID) and **Sign-in Callback URL**. Leave **Default Drive Owner** empty. On save, Dify checks the fields and, with a specific tenant ID, that Microsoft accepts the client ID and secret; no user's OneDrive is opened and no user token is stored in the authorization.
+5. In the agent, add **OneDrive**, keep the tools you want and **Sign Out of OneDrive**, and choose this authorization in the credential menu. If the menu shows an OAuth authorization instead, the tools use that one shared OneDrive and no one is asked to sign in. Instructions like these work well:
+
+```
+You can use the OneDrive tools on the current user's own OneDrive.
+- If a tool says the user needs to sign in and returns a link, give the link to the user exactly as returned. Ask them to open it, sign in with their own Microsoft account, and reply "done" when finished. After they reply, call the same tool again.
+- Before deleting a file, tell the user which file and ask them to confirm.
+- Never make up files. If a tool returns an error, tell the user what it says.
+- If the user asks to sign out or switch accounts, call onedrive_sign_out.
+```
+
+Search works in this mode (it does not have the Service Principal limitation below): it runs as the user, with their delegated `Files.Read.All`.
+
+How it works and what to know:
+- Each user's tokens are kept in the plugin's storage, encrypted with a key derived from the client secret. They never reach the agent or the logs. The endpoint only holds a one-time authorization code briefly; turning it into a token also needs the client secret and a PKCE verifier it never sees.
+- Users stay signed in while they keep using it (the access token is renewed hourly; Microsoft's refresh token expires after about 90 days unused). They sign in again after signing out, a password change, an administrator revoking their sessions, or a client secret rotation.
+- Users are told apart by Dify's user ID. It is stable in the console and for Service API callers that always send the same `user`; in a public web app without login, each browser is a new anonymous user. The Service API `user` value is chosen by the caller, so call the API only from a trusted backend.
+- Each plugin keeps its own sign-in: with Outlook or Teams in the same agent, a user signs in once for each, and signing out of one leaves the others signed in. With one app registration for all of them and admin consent, the later sign-ins usually need no password.
+- A user could send their own sign-in link to a colleague, whose OneDrive would then be connected to the sender's chat. The **Signed in** page warns about this and offers to cancel; an administrator can end any connection by revoking the user's sessions in Entra.
+
 ## Tool Descriptions
 
 ### get_file_by_id
@@ -117,6 +155,9 @@ Upload a file to the OneDrive root directory; a `file_name` such as `reports/q3.
 - file (file): The file to upload to OneDrive.
 - file_name (string, optional): Custom name for the uploaded file. If not provided, the original file name is used.
 
+### onedrive_sign_out
+*Each user signs in* only: forget the current user's OneDrive sign-in, for switching accounts. Other plugins (for example Outlook) keep their own sign-in. No parameters.
+
 
 
 ## Output variables
@@ -129,6 +170,7 @@ Besides `text` and `json` (unchanged), every tool returns typed variables that l
 | Delete File by ID | `file_id` |
 | Search File or Folder by Name | `items`, `count` |
 | Upload File | `file_id`, `name`, `size`, `web_url` |
+| Sign Out of OneDrive | `signed_out` |
 
 ## PRIVACY
 
