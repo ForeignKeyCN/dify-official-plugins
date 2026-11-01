@@ -39,7 +39,7 @@ Microsoft Graph 経由で Microsoft Outlook と連携する Dify プラグイン
 - **Get Event**、**Update Event**、**Delete Event**。
 
 ### アカウント
-- **Sign Out**（1.0.0）: 「ユーザーごとにサインイン」でのみ使えます。現在のユーザーの Microsoft サインインを削除し、アカウントを切り替えられるようにします。
+- **Sign Out of Outlook**（`outlook_sign_out`、1.0.0）: 「ユーザーごとにサインイン」でのみ使えます。現在のユーザーの Outlook のサインインを削除し、アカウントを切り替えられるようにします。ほかのプラグイン（Teams など）のサインインはそのままです。
 
 ## 手順 1: Microsoft Entra ID にアプリを登録する
 
@@ -156,8 +156,8 @@ Microsoft でのサインイン後、ブラウザーはプラグイン自身の�
 
 ### 4. エージェントを設定する
 
-1. エージェントを作成し、**TOOLS** の **Add** から **Outlook** を追加します。必要なメールとカレンダーのツール、および **Sign Out** を残します。
-2. Outlook の横の認証メニューで、3. で追加した認証を選びます。OAuth の認証を選ぶと、ツールはその 1 つの共有メールボックスを使い、Sign Out も機能しません。
+1. エージェントを作成し、**TOOLS** の **Add** から **Outlook** を追加します。必要なメールとカレンダーのツール、および **Sign Out of Outlook** を残します。
+2. Outlook の横の認証メニューで、3. で追加した認証を選びます。OAuth の認証を選ぶと、ツールはその 1 つの共有メールボックスを使い、Sign Out of Outlook も機能しません。
 
    ![認証を選ぶ](../_assets/agent-credential.png)
 
@@ -169,7 +169,7 @@ Microsoft でのサインイン後、ブラウザーはプラグイン自身の�
    - When the user asks about their email, call list_messages or get_message. Create a draft instead of sending unless the user clearly asks you to send.
    - If a tool says the user needs to sign in and returns a link, give the link to the user exactly as returned. Ask them to open it, sign in with their own Microsoft account, and reply "done" when finished. After they reply, call the same tool again.
    - Never make up emails or events. If a tool returns an error, tell the user what it says.
-   - If the user asks to sign out or switch accounts, call sign_out.
+   - If the user asks to sign out or switch accounts, call outlook_sign_out.
    ```
 
 4. エージェントを公開します。
@@ -249,7 +249,7 @@ Outlook のツールをエージェントやワークフローに追加し、入
 | Get Event | `event_id`、`subject`、`start`、`end`、`time_zone`、`location`、`web_link`、`online_meeting_url` |
 | Update Event | `event_id`、`subject`、`start`、`end`、`time_zone`、`location`、`web_link`、`online_meeting_url` |
 | Delete Event | `event_id` |
-| Sign Out | `signed_out` |
+| Sign Out of Outlook | `signed_out` |
 
 ## トラブルシューティング
 
@@ -258,7 +258,7 @@ Outlook のツールをエージェントやワークフローに追加し、入
 | Microsoft の画面に `AADSTS50011: The redirect URI ... does not match` と表示される | リクエストの URL がアプリに登録されていません。**Authentication** → **Web** にまったく同じ URL を追加してください。ユーザーごとにサインインでは、`localhost` ではなく `https` のエンドポイント URL を登録します。 |
 | `AADSTS7000215` / クライアント シークレットが無効 | シークレット ID ではなく **Value** を入力し、有効期限が切れていないか確認してください。 |
 | `OAuth credential for tool provider ... could not be refreshed` | エージェントやノードが使っている OAuth の認証が期限切れか、取り消されています。認証し直すか、別の認証を選んでください。 |
-| Sign Out が「ワークスペースで共有された認証」と答える | エージェントが OAuth かサービス プリンシパルの認証を使っています。「ユーザーごとにサインイン」の認証を選んでください。 |
+| Sign Out of Outlook が「ワークスペースで共有された認証」と答える | エージェントが OAuth かサービス プリンシパルの認証を使っています。「ユーザーごとにサインイン」の認証を選んでください。 |
 | 別のブラウザーで再びサインインを求められる | Web アプリが公開設定のため、ブラウザーごとに別の匿名 Dify ユーザーになります。[サインインが続く期間](#サインインが続く期間)を参照してください。 |
 | エンドポイント URL が `http://localhost` で始まる | `ENDPOINT_URL_TEMPLATE` を設定してください。[1.](#1-サインイン用エンドポイントを作成する) を参照してください。 |
 | サービス プリンシパルで特定のメールボックスに 403 が返る | アプリケーションのアクセス許可に管理者の同意がないか、Exchange の RBAC for Applications の範囲にそのメールボックスが含まれていません。 |

@@ -132,7 +132,7 @@ def test_provider_yaml_offers_both_credential_types():
 
 def test_every_tool_has_a_form_only_mailbox_parameter():
     for path in sorted((PLUGIN_ROOT / "tools").glob("*.yaml")):
-        if path.stem == "sign_out":
+        if path.stem == "outlook_sign_out":
             continue
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
         mailbox = [p for p in data["parameters"] if p["name"] == "mailbox"]

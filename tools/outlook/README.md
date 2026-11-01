@@ -39,7 +39,7 @@ All three use the same Microsoft Entra app registration (step 1 below) and can e
 - **Get Event**, **Update Event**, **Delete Event**.
 
 ### Account
-- **Sign Out** (1.0.0): *Each user signs in* only. Forgets the current user's Microsoft sign-in, for switching accounts.
+- **Sign Out of Outlook** (`outlook_sign_out`, 1.0.0): *Each user signs in* only. Forgets the current user's Outlook sign-in, for switching accounts. Other plugins (for example Teams) keep their own sign-in.
 
 ## Step 1: Register an app in Microsoft Entra ID
 
@@ -156,8 +156,8 @@ In the app registration, open **Authentication** → **Add Redirect URI** → **
 
 ### 4. Set up the agent
 
-1. Create an agent, click **Add** under **TOOLS**, and add **Outlook**. Keep the email and calendar tools you want and **Sign Out**.
-2. In the credential menu next to Outlook, choose the authorization from section 3. If the menu shows an OAuth authorization instead, the tools act on that one shared mailbox and Sign Out does nothing.
+1. Create an agent, click **Add** under **TOOLS**, and add **Outlook**. Keep the email and calendar tools you want and **Sign Out of Outlook**.
+2. In the credential menu next to Outlook, choose the authorization from section 3. If the menu shows an OAuth authorization instead, the tools act on that one shared mailbox and Sign Out of Outlook does nothing.
 
    ![Choose the authorization](_assets/agent-credential.png)
 
@@ -169,7 +169,7 @@ In the app registration, open **Authentication** → **Add Redirect URI** → **
    - When the user asks about their email, call list_messages or get_message. Create a draft instead of sending unless the user clearly asks you to send.
    - If a tool says the user needs to sign in and returns a link, give the link to the user exactly as returned. Ask them to open it, sign in with their own Microsoft account, and reply "done" when finished. After they reply, call the same tool again.
    - Never make up emails or events. If a tool returns an error, tell the user what it says.
-   - If the user asks to sign out or switch accounts, call sign_out.
+   - If the user asks to sign out or switch accounts, call outlook_sign_out.
    ```
 
 4. Publish the agent.
@@ -249,7 +249,7 @@ Besides `text` and `json` (unchanged), every tool returns typed variables that l
 | Get Event | `event_id`, `subject`, `start`, `end`, `time_zone`, `location`, `web_link`, `online_meeting_url` |
 | Update Event | `event_id`, `subject`, `start`, `end`, `time_zone`, `location`, `web_link`, `online_meeting_url` |
 | Delete Event | `event_id` |
-| Sign Out | `signed_out` |
+| Sign Out of Outlook | `signed_out` |
 
 ## Troubleshooting
 
@@ -258,7 +258,7 @@ Besides `text` and `json` (unchanged), every tool returns typed variables that l
 | `AADSTS50011: The redirect URI ... does not match` on the Microsoft page | The URL in the request is not registered on the app. Add exactly that URL under **Authentication** → **Web**. For Each user signs in, it must be the `https` endpoint URL, not `localhost`. |
 | `AADSTS7000215` / invalid client secret | Use the secret's **Value**, not its Secret ID, and check it has not expired. |
 | `OAuth credential for tool provider ... could not be refreshed` | The agent or node uses an OAuth authorization whose sign-in expired or was revoked. Authorize again, or choose another authorization. |
-| Sign Out says the credential is shared by the workspace | The agent uses an OAuth or Service Principal authorization. Choose the *Each user signs in* authorization. |
+| Sign Out of Outlook says the credential is shared by the workspace | The agent uses an OAuth or Service Principal authorization. Choose the *Each user signs in* authorization. |
 | Users are asked to sign in again in another browser | The web app is public, so each browser is a different anonymous Dify user. See [How long users stay signed in](#how-long-users-stay-signed-in). |
 | The endpoint URL starts with `http://localhost` | Set `ENDPOINT_URL_TEMPLATE`, see [section 1](#1-create-the-sign-in-endpoint). |
 | A Service Principal tool returns 403 for a mailbox | Admin consent is missing for the application permissions, or an Exchange RBAC for Applications scope excludes that mailbox. |

@@ -11,8 +11,8 @@ import yaml
 
 TOOLS_DIR = Path(__file__).resolve().parents[1] / "tools"
 PY_TYPES = {"string": str, "integer": int, "number": (int, float), "boolean": bool, "object": dict, "array": list}
-# The Graph tools; sign_out touches no mailbox and is covered in test_user_auth.
-TOOL_FILES = sorted(p.stem for p in TOOLS_DIR.glob("*.yaml") if p.stem != "sign_out")
+# The Graph tools; outlook_sign_out touches no mailbox and is covered in test_user_auth.
+TOOL_FILES = sorted(p.stem for p in TOOLS_DIR.glob("*.yaml") if p.stem != "outlook_sign_out")
 
 ADDR = {"emailAddress": {"name": "Kim", "address": "kim@contoso.com"}}
 ITEM = {

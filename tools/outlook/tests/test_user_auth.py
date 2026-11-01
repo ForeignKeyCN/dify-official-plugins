@@ -245,7 +245,7 @@ def test_china_cloud_uses_china_hosts_and_qualified_scopes():
 
 
 def run_sign_out(credentials, storage, user_id="user-1"):
-    from tools.sign_out import SignOutTool
+    from tools.outlook_sign_out import SignOutTool
 
     tool = SignOutTool.__new__(SignOutTool)
     tool.runtime = SimpleNamespace(credentials=credentials, user_id=user_id)

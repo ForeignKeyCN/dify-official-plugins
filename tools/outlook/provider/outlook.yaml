@@ -389,7 +389,7 @@ tools:
   - tools/get_event.yaml
   - tools/update_event.yaml
   - tools/delete_event.yaml
-  - tools/sign_out.yaml
+  - tools/outlook_sign_out.yaml
 extra:
   python:
     source: provider/outlook.py

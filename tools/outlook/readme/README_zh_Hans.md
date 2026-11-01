@@ -39,7 +39,7 @@ Dify 的 Microsoft Outlook 集成（通过 Microsoft Graph），支持**邮件�
 - **Get Event**、**Update Event**、**Delete Event**。
 
 ### 账号
-- **Sign Out**（1.0.0）：仅限"每个用户自己登录"。清除当前用户的 Microsoft 登录，用于切换账号。
+- **Sign Out of Outlook**（`outlook_sign_out`，1.0.0）：仅限"每个用户自己登录"。清除当前用户的 Outlook 登录，用于切换账号。其他插件（例如 Teams）的登录不受影响。
 
 ## 第 1 步：在 Microsoft Entra ID 中注册应用
 
@@ -156,8 +156,8 @@ Dify 的 Microsoft Outlook 集成（通过 Microsoft Graph），支持**邮件�
 
 ### 4. 配置 Agent
 
-1. 创建一个 Agent，在 **TOOLS** 下点击 **Add**，添加 **Outlook**。保留需要的邮件和日历工具，以及 **Sign Out**。
-2. 在 Outlook 旁边的凭证菜单中，选择第 3 节添加的授权。如果选的是 OAuth 授权，工具访问的就是那一个共享邮箱，Sign Out 也不会生效。
+1. 创建一个 Agent，在 **TOOLS** 下点击 **Add**，添加 **Outlook**。保留需要的邮件和日历工具，以及 **Sign Out of Outlook**。
+2. 在 Outlook 旁边的凭证菜单中，选择第 3 节添加的授权。如果选的是 OAuth 授权，工具访问的就是那一个共享邮箱，Sign Out of Outlook 也不会生效。
 
    ![选择授权](../_assets/agent-credential.png)
 
@@ -169,7 +169,7 @@ Dify 的 Microsoft Outlook 集成（通过 Microsoft Graph），支持**邮件�
    - When the user asks about their email, call list_messages or get_message. Create a draft instead of sending unless the user clearly asks you to send.
    - If a tool says the user needs to sign in and returns a link, give the link to the user exactly as returned. Ask them to open it, sign in with their own Microsoft account, and reply "done" when finished. After they reply, call the same tool again.
    - Never make up emails or events. If a tool returns an error, tell the user what it says.
-   - If the user asks to sign out or switch accounts, call sign_out.
+   - If the user asks to sign out or switch accounts, call outlook_sign_out.
    ```
 
 4. 发布 Agent。
@@ -249,7 +249,7 @@ OAuth、Service Principal 和"每个用户自己登录"都有 **Microsoft Cloud*
 | Get Event | `event_id`、`subject`、`start`、`end`、`time_zone`、`location`、`web_link`、`online_meeting_url` |
 | Update Event | `event_id`、`subject`、`start`、`end`、`time_zone`、`location`、`web_link`、`online_meeting_url` |
 | Delete Event | `event_id` |
-| Sign Out | `signed_out` |
+| Sign Out of Outlook | `signed_out` |
 
 ## 常见问题
 
@@ -258,7 +258,7 @@ OAuth、Service Principal 和"每个用户自己登录"都有 **Microsoft Cloud*
 | Microsoft 页面显示 `AADSTS50011: The redirect URI ... does not match` | 请求里的地址没有在应用中登记。在 **Authentication** → **Web** 中添加完全相同的地址。"每个用户自己登录"必须登记 `https` 的 Endpoint 地址，不能是 `localhost`。 |
 | `AADSTS7000215` / client secret 无效 | 填写的应该是 secret 的 **Value**，不是 Secret ID；同时确认它没有过期。 |
 | `OAuth credential for tool provider ... could not be refreshed` | Agent 或节点使用的 OAuth 授权已过期或被撤销。重新授权，或者换一个授权。 |
-| Sign Out 回复说这个凭证由整个工作区共享 | Agent 用的是 OAuth 或 Service Principal 授权。请改选"每个用户自己登录"的授权。 |
+| Sign Out of Outlook 回复说这个凭证由整个工作区共享 | Agent 用的是 OAuth 或 Service Principal 授权。请改选"每个用户自己登录"的授权。 |
 | 换一个浏览器又要求登录 | WebApp 是公开的，每个浏览器都是不同的匿名 Dify 用户。见[用户能保持登录多久](#用户能保持登录多久)。 |
 | Endpoint URL 以 `http://localhost` 开头 | 设置 `ENDPOINT_URL_TEMPLATE`，见[第 1 节](#1-创建登录回调-endpoint)。 |
 | Service Principal 访问某个邮箱时返回 403 | 应用程序权限没有授予管理员同意，或者 Exchange 的 RBAC for Applications 范围不包括这个邮箱。 |
