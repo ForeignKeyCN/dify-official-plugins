@@ -78,6 +78,20 @@ parameters:
     zh_Hans: 'JSON 数组：以列标题为键的对象，例如 [{"Name": "Kim", "Score": 90}]，或单元格值的列表'
     ja_JP: 'JSON 配列: 列見出しをキーにしたオブジェクト（例: [{"Name": "Kim", "Score": 90}]）、またはセル値のリスト'
   llm_description: 'JSON array of objects keyed by header, each with the key column, e.g. [{"ID": "42", "Status": "Done"}].'
+- name: update_all
+  type: boolean
+  required: false
+  form: llm
+  label:
+    en_US: Update All Matches
+    zh_Hans: 更新所有匹配行
+    ja_JP: 一致するすべての行を更新
+  human_description:
+    en_US: Update every row with the key, not only the first
+    zh_Hans: 更新所有键值相同的行，而不只是第一行
+    ja_JP: 最初の行だけでなく、キーが一致するすべての行を更新します
+  llm_description: Update every row whose key column matches, not only the first. Default false.
+  default: false
 - name: drive_user
   type: string
   required: false

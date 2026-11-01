@@ -134,6 +134,13 @@ CASES = {
                            {("GET", f"{TABLE}/columns"): FakeResponse({"value": [{"name": "Name", "index": 0}]}),
                             ("GET", f"{TABLE}/rows"): FakeResponse({"value": [{"index": 0, "values": [["Kim"]]}]})}),
 }
+CASES.update({
+    "excel_get_rows": ({"workbook_id": "wb1", "worksheet_name": "Sheet1"},
+                       {("GET", USED): FakeResponse({"address": "Sheet1!A1:B2", "values": [["Name", "Score"], ["Kim", 90]]})}),
+    "excel_update_rows": ({"workbook_id": "wb1", "worksheet_name": "Sheet1", "key_column": "Name", "rows": '[{"Name": "Kim", "Score": 95}]'},
+                          {("GET", USED): FakeResponse({"address": "Sheet1!A1:B2", "values": [["Name", "Score"], ["Kim", 90]]}),
+                           ("PATCH", f"{WB}/worksheets/Sheet1/range(address=%27A2%3AB2%27)"): FakeResponse({})}),
+})
 
 
 def schema(name):
@@ -299,3 +306,72 @@ def test_service_principal_validation_opens_the_default_drive(monkeypatch):
 ])
 def test_top_left_ignores_the_sheet_name(address, expected):
     assert graph_module.top_left(address) == expected
+
+
+# ── n8n options: Get Rows, Update, Update All Matches, Return All Matches ──
+
+SHEET = {"address": "Sheet1!A1:C5", "values": [["Title", "", ""], ["ID", "Status", "Owner"], [1, "Open", "Kim"], ["", "", ""], [1, "Open", "Lee"]]}
+
+
+def test_get_rows_uses_the_header_row_and_skips_blank_rows(monkeypatch):
+    _, out, _ = run("excel_get_rows", {"workbook_id": "wb1", "worksheet_name": "Sheet1", "header_row": 1}, {("GET", USED): FakeResponse(SHEET)}, monkeypatch)
+    assert out["columns"] == ["ID", "Status", "Owner"]
+    assert out["rows"] == [{"ID": 1, "Status": "Open", "Owner": "Kim"}, {"ID": 1, "Status": "Open", "Owner": "Lee"}]
+    _, out, _ = run("excel_get_rows", {"workbook_id": "wb1", "worksheet_name": "Sheet1", "header_row": 1, "limit": 1}, {("GET", USED): FakeResponse(SHEET)}, monkeypatch)
+    assert out["count"] == 1 and out["has_more"] is True
+
+
+def test_get_rows_reads_a_given_range_and_checks_the_row_numbers(monkeypatch):
+    graph, out, _ = run("excel_get_rows", {"workbook_id": "wb1", "worksheet_name": "Sheet1", "range": "B2:C3"}, {
+        ("GET", f"{WB}/worksheets/Sheet1/range(address=%27B2%3AC3%27)"): FakeResponse({"address": "Sheet1!B2:C3", "values": [["Status", "Owner"], ["Open", "Kim"]]}),
+    }, monkeypatch)
+    assert out["rows"] == [{"Status": "Open", "Owner": "Kim"}]
+    _, out, texts = run("excel_get_rows", {"workbook_id": "wb1", "worksheet_name": "Sheet1", "header_row": 2, "first_data_row": 1}, {}, monkeypatch)
+    assert out["success"] is False and "after header_row" in texts[0]
+
+
+DUPES = {"address": "Sheet1!A1:C4", "values": [["ID", "Status", "Owner"], [1, "Open", "Kim"], [2, "Open", "Park"], [1, "Open", "Lee"]]}
+
+
+def patches(graph):
+    return {c.url.rsplit("address=", 1)[1]: c.json["values"] for c in graph.calls if c.method == "PATCH"}
+
+
+def routes_for(sheet):
+    ok = lambda call: FakeResponse({})  # noqa: E731
+    routes = {("GET", USED): FakeResponse(sheet)}
+    for row in range(2, 8):
+        routes[("PATCH", f"{WB}/worksheets/Sheet1/range(address=%27A{row}%3AC{row}%27)")] = ok
+    return routes
+
+
+def test_update_rows_changes_matches_only_and_reports_the_rest(monkeypatch):
+    graph, out, texts = run("excel_update_rows", {"workbook_id": "wb1", "worksheet_name": "Sheet1", "key_column": "ID",
+                                                   "rows": [{"ID": 1, "Status": "Done"}, {"ID": 7, "Status": "New"}]}, routes_for(DUPES), monkeypatch)
+    assert patches(graph) == {"%27A2%3AC2%27)": [[1, "Done", "Kim"]]}  # first match only, Owner kept
+    assert out["rows_updated"] == 1 and out["not_found"] == ["7"] and "nothing was added" in texts[0]
+
+
+def test_update_all_matches(monkeypatch):
+    graph, out, _ = run("excel_update_rows", {"workbook_id": "wb1", "worksheet_name": "Sheet1", "key_column": "ID", "update_all": True,
+                                               "rows": '[{"ID": 1, "Status": "Done"}]'}, routes_for(DUPES), monkeypatch)
+    assert patches(graph) == {"%27A2%3AC2%27)": [[1, "Done", "Kim"]], "%27A4%3AC4%27)": [[1, "Done", "Lee"]]}
+    assert out["rows_updated"] == 2
+
+
+def test_upsert_update_all_matches_and_append(monkeypatch):
+    graph, out, _ = run("excel_upsert_rows", {"workbook_id": "wb1", "worksheet_name": "Sheet1", "key_column": "ID", "update_all": True,
+                                               "rows": '[{"ID": 1, "Owner": "Choi"}, {"ID": 9, "Status": "New"}]'}, routes_for(DUPES), monkeypatch)
+    assert patches(graph) == {"%27A2%3AC2%27)": [[1, "Open", "Choi"]], "%27A4%3AC4%27)": [[1, "Open", "Choi"]], "%27A5%3AC5%27)": [[9, "New", ""]]}
+    assert out["rows_updated"] == 2 and out["rows_appended"] == 1
+
+
+def test_lookup_can_return_only_the_first_match(monkeypatch):
+    routes = {
+        ("GET", f"{TABLE}/columns"): FakeResponse({"value": [{"name": "Name", "index": 0}]}),
+        ("GET", f"{TABLE}/rows"): FakeResponse({"value": [{"values": [["Kim"]]}, {"values": [["Kim"]]}]}),
+    }
+    _, out, _ = run("excel_lookup_table", {"workbook_id": "wb1", "table": "Sales", "column": "Name", "value": "Kim"}, routes, monkeypatch)
+    assert out["count"] == 2
+    _, out, _ = run("excel_lookup_table", {"workbook_id": "wb1", "table": "Sales", "column": "Name", "value": "Kim", "return_all_matches": False}, routes, monkeypatch)
+    assert out["count"] == 1

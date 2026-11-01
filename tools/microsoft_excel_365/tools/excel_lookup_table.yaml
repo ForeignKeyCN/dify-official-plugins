@@ -10,7 +10,8 @@ description:
     en_US: The rows of a table where a column equals a value
     zh_Hans: 表格中某列等于指定值的行
     ja_JP: テーブルで列が値と一致する行
-  llm: Find the rows of an Excel table where a column equals a value (compared as text). Returns all matching rows.
+  llm: Find the rows of an Excel table where a column equals a value (compared as text). Returns all matching rows, or only
+    the first with return_all_matches=false.
 parameters:
 - name: site_id
   type: string
@@ -77,6 +78,20 @@ parameters:
     zh_Hans: 要查找的值
     ja_JP: 検索する値
   llm_description: The value to find (exact match, compared as text).
+- name: return_all_matches
+  type: boolean
+  required: false
+  form: llm
+  label:
+    en_US: Return All Matches
+    zh_Hans: 返回所有匹配行
+    ja_JP: 一致するすべての行を返す
+  human_description:
+    en_US: Return every matching row (default) or only the first
+    zh_Hans: 返回所有匹配行（默认）或只返回第一行
+    ja_JP: 一致するすべての行（既定）か、最初の行だけを返します
+  llm_description: Return every matching row (default true) or only the first.
+  default: true
 - name: drive_user
   type: string
   required: false

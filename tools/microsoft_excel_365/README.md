@@ -29,11 +29,11 @@ This plugin supports comprehensive Excel 365 operations including:
 - **Data Writing**: Update or insert data into cells with 2D array support
 - **Data Clearing**: Remove content from specified cell ranges
 - **Data Search**: Find specific values within worksheets and get their locations
-- **Rows by header** (new in 1.0.0): append rows, or update rows matched on a key column and append the rest, giving rows as `{"Column": value}` objects
+- **Rows by header** (new in 1.0.0): read rows as `{"Column": value}` objects, append rows, update rows matched on a key column, or update-or-append
 - **Tables** (new in 1.0.0): list, add, delete and convert Excel tables; read their columns and rows, append rows, and look up rows by a column value
 - **Delete** (new in 1.0.0): workbooks and worksheets
 
-Together these cover every operation of n8n's Microsoft Excel 365 node (v2).
+Together these cover every operation of n8n's Microsoft Excel 365 node (v2). `read_worksheet_data` and `write_worksheet_data` remain for raw cell grids (n8n's *RAW* modes of Get Rows and Update).
 
 ## Setup
 
@@ -233,7 +233,9 @@ All take `workbook_id` and the optional `site_id`; with a Service Principal, als
 | Tool | n8n operation | What it does |
 |---|---|---|
 | `excel_append_rows` | Worksheet: Append | Adds rows below the data on a worksheet; on an empty sheet, object keys become the header row |
-| `excel_upsert_rows` | Worksheet: Append or Update | Updates rows whose `key_column` matches (only the given columns change) and appends the others |
+| `excel_get_rows` | Worksheet: Get Rows | Rows as objects keyed by the header row; reads the used range unless a range is given, with Header Row / First Data Row (default 500 rows, up to 5000) |
+| `excel_update_rows` | Worksheet: Update | Updates rows whose `key_column` matches (only the given columns change); never appends, reports keys with no match. **Update All Matches** option |
+| `excel_upsert_rows` | Worksheet: Append or Update | Updates rows whose `key_column` matches (only the given columns change) and appends the others. **Update All Matches** option |
 | `excel_delete_worksheet` | Worksheet: Delete | Deletes a worksheet |
 | `excel_delete_workbook` | Workbook: Delete | Deletes a workbook file (to the recycle bin) |
 | `excel_list_tables` | (table picker) | Lists the tables in a workbook and their worksheets |
@@ -243,7 +245,7 @@ All take `workbook_id` and the optional `site_id`; with a Service Principal, als
 | `excel_get_table_columns` | Table: Get Columns | The table's column names |
 | `excel_get_table_rows` | Table: Get Rows | Rows as objects keyed by column name (default 100, up to 5000) |
 | `excel_append_table_rows` | Table: Append | Adds rows at the end of a table |
-| `excel_lookup_table` | Table: Lookup | Rows where a column equals a value |
+| `excel_lookup_table` | Table: Lookup | Rows where a column equals a value; **Return All Matches** (default) or only the first |
 | `excel_sign_out` | – | *Each user signs in* only: forgets the current user's Excel sign-in |
 
 The new tools carry an `excel_` prefix because Dify's agent requires tool names to be unique across all the plugins an agent uses.
@@ -263,6 +265,8 @@ Besides `text` and `json` (unchanged), every tool returns typed variables that l
 | clear_worksheet_data | `range_cleared` |
 | search_worksheet_data | `matches`, `match_count` |
 | excel_append_rows | `address`, `rows_appended` |
+| excel_get_rows | `rows`, `columns`, `count`, `has_more`, `address` |
+| excel_update_rows | `rows_updated`, `not_found` |
 | excel_upsert_rows | `rows_updated`, `rows_appended` |
 | excel_delete_worksheet | `worksheet_name` |
 | excel_delete_workbook | `workbook_id` |

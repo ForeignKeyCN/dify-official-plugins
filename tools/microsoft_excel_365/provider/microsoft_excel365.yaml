@@ -243,6 +243,8 @@ tools:
 - tools/create_worksheet.yaml
 - tools/search_worksheet_data.yaml
 - tools/excel_append_rows.yaml
+- tools/excel_get_rows.yaml
+- tools/excel_update_rows.yaml
 - tools/excel_upsert_rows.yaml
 - tools/excel_delete_worksheet.yaml
 - tools/excel_delete_workbook.yaml

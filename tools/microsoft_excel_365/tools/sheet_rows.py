@@ -90,3 +90,70 @@ class UsedRange:
         first = column_letter(self.first_col)
         last = column_letter(self.first_col + width - 1)
         return f"{first}{row_number}:{last}{row_number + height - 1}"
+
+
+def match_and_write(
+    ctx: GraphContext,
+    workbook_id: str,
+    worksheet: str,
+    key_column: str,
+    records: list[Any],
+    *,
+    update_all: bool,
+    append: bool,
+) -> tuple[int, list[str], list[str]]:
+    """
+    Write each record (an object keyed by header) into the rows whose key column matches it;
+    columns left out of a record keep their value. Only the first match is updated unless
+    ``update_all``. Records with no match are appended below the data when ``append``,
+    otherwise reported. Returns (rows updated, keys appended, keys not found).
+    """
+    if not records or not isinstance(records[0], dict):
+        raise GraphAuthError('rows must be objects keyed by column header, e.g. [{"ID": "42", "Status": "Done"}].')
+    used = UsedRange(ctx, workbook_id, worksheet)
+    if used.empty:
+        raise GraphAuthError(f"'{worksheet}' has no header row and no data to match.")
+    header = [str(h) for h in used.header]
+    if key_column not in header:
+        raise GraphAuthError(f"'{key_column}' is not a column header. Headers: {', '.join(header)}.")
+    key_at = header.index(key_column)
+    if any(str(r.get(key_column, "")).strip() == "" for r in records):
+        raise GraphAuthError(f"Every row needs a value for the key column '{key_column}'.")
+    rows_for_header(records, header)  # rejects keys that are not headers
+
+    # Sheet row numbers of each key, in sheet order, and the current cells of every data row.
+    where: dict[str, list[int]] = {}
+    current: dict[int, list[Any]] = {}
+    for i, row in enumerate(used.rows):
+        number = used.first_row + 1 + i
+        current[number] = list(row) + [""] * (len(header) - len(row))
+        where.setdefault(str(row[key_at]) if key_at < len(row) else "", []).append(number)
+
+    updated, appended, missing = 0, [], []
+    next_row = used.next_row()
+    for record in records:
+        key = str(record[key_column])
+        targets = where.get(key, [])
+        if not update_all:
+            targets = targets[:1]
+        if not targets:
+            if not append:
+                missing.append(key)
+                continue
+            targets = [next_row]
+            where[key] = [next_row]
+            current[next_row] = [""] * len(header)
+            next_row += 1
+            appended.append(key)
+        else:
+            updated += len(targets)
+        values = rows_for_header([record], header)[0]
+        for number in targets:
+            cells = current[number]
+            for col, name in enumerate(header):
+                if name in record:
+                    cells[col] = values[col]
+            graph_request(
+                ctx, "PATCH", ctx.range(workbook_id, worksheet, used.address(number, len(header))), json_body={"values": [cells]}
+            )
+    return updated, appended, missing

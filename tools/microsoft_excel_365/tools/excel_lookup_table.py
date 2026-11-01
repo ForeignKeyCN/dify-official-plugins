@@ -26,6 +26,8 @@ class LookupTableTool(Tool):
         at = header.index(column)
         # Text comparison, so 42 matches "42" (Excel returns numbers for numeric cells).
         matches = as_records(header, [r for r in rows if at < len(r) and str(r[at]).strip() == value.strip()])
+        if tool_parameters.get("return_all_matches") is False:
+            matches = matches[:1]
         self._out.update(rows=matches, count=len(matches), success=True)
         note = f" (only the first {_LOOKUP_MAX_ROWS} rows were searched)" if truncated else ""
         yield self.create_text_message(f"{len(matches)} row(s) where {column} = {value}{note}.")
