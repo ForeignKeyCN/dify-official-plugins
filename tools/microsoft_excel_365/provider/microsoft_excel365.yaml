@@ -1,3 +1,17 @@
+identity:
+  author: langgenius
+  description:
+    en_US: Connect to Microsoft Excel 365 for spreadsheet operations
+    ja_JP: Microsoft Excel 365に接続してスプレッドシート操作を実行
+    zh_Hans: 连接 Microsoft Excel 365 进行电子表格操作
+  icon: icon.svg
+  label:
+    en_US: Microsoft Excel 365
+    ja_JP: Microsoft Excel 365
+    zh_Hans: Microsoft Excel 365
+  name: excel365
+  tags:
+  - utilities
 credentials_for_provider:
   auth_mode:
     default: service_principal
@@ -25,6 +39,23 @@ credentials_for_provider:
       value: per_user
     required: false
     type: select
+  tenant_id:
+    help:
+      en_US: Your directory (tenant) ID, from Microsoft Entra ID > Overview or the app registration's Overview. Service Principal
+        must use it ('common' does not work); with Each user signs in it limits sign-in to your organization.
+      ja_JP: ディレクトリ（テナント）ID です。Microsoft Entra ID > 概要、またはアプリ登録の概要で確認できます。サービス プリンシパルでは必須です（'common' は使えません）。ユーザーごとのサインインでは、自組織のアカウントだけがサインインできるようにします。
+      zh_Hans: 目录（租户）ID，可在 Microsoft Entra ID > 概述或应用注册的概述页找到。Service Principal 必须填它（不能用 'common'）；“每个用户自己登录”模式下，填它可以只允许本组织的账号登录。
+    label:
+      en_US: Tenant ID
+      ja_JP: テナント ID
+      zh_Hans: 租户 ID
+    placeholder:
+      en_US: Directory (tenant) ID, e.g. 00000000-0000-0000-0000-000000000000
+      ja_JP: 'ディレクトリ（テナント）ID、例: 00000000-0000-0000-0000-000000000000'
+      zh_Hans: 目录（租户）ID，例如 00000000-0000-0000-0000-000000000000
+    required: true
+    type: text-input
+    url: https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Overview
   client_id:
     help:
       en_US: The Application (client) ID on the app registration's Overview page.
@@ -60,6 +91,38 @@ credentials_for_provider:
     required: true
     type: secret-input
     url: https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
+  drive_user:
+    help:
+      en_US: 'Service Principal: the user (user principal name or user ID) whose OneDrive holds the workbooks; a tool''s Drive
+        Owner or Site ID overrides it. Not used when each user signs in.'
+      ja_JP: 'サービス プリンシパル: ブックがある OneDrive のユーザー（ユーザー プリンシパル名またはユーザー ID）。ツールの「ドライブ所有者」またはサイト ID が優先されます。ユーザーごとのサインインでは使いません。'
+      zh_Hans: Service Principal：工作簿所在 OneDrive 的用户（用户主体名称或用户 ID），工具的“网盘所有者”或站点 ID 会覆盖此值。每个用户自己登录时不使用。
+    label:
+      en_US: Default Drive Owner
+      ja_JP: 既定のドライブ所有者
+      zh_Hans: 默认网盘所有者
+    placeholder:
+      en_US: e.g. alice@contoso.com
+      ja_JP: 例 alice@contoso.com
+      zh_Hans: 例如 alice@contoso.com
+    required: false
+    type: text-input
+  redirect_uri:
+    help:
+      en_US: Create this plugin's endpoint (plugin details > Endpoints), paste its /excel/callback URL here, and add the same
+        URL to the app registration's Web redirect URIs.
+      ja_JP: このプラグインのエンドポイントを作成し（プラグインの詳細 > エンドポイント）、その /excel/callback の URL をここに貼り付け、同じ URL をアプリ登録の Web リダイレクト URI に追加してください。
+      zh_Hans: 先创建本插件的端点（插件详情 > 端点），把它的 /excel/callback URL 粘贴到这里，并把同一个 URL 加到应用注册的 Web 重定向 URI 中。
+    label:
+      en_US: Sign-in Callback URL
+      ja_JP: サインイン コールバック URL
+      zh_Hans: 登录回调 URL
+    placeholder:
+      en_US: Only for "Each user signs in", e.g. https://dify.example.com/e/xxxx/excel/callback
+      ja_JP: 'ユーザーごとのサインインのみ。例: https://dify.example.com/e/xxxx/excel/callback'
+      zh_Hans: 仅用于“每个用户自己登录”，例如 https://dify.example.com/e/xxxx/excel/callback
+    required: false
+    type: text-input
   cloud:
     default: global
     help: &id001
@@ -93,72 +156,6 @@ credentials_for_provider:
       value: china
     required: false
     type: select
-  drive_user:
-    help:
-      en_US: 'Service Principal: the user (user principal name or user ID) whose OneDrive holds the workbooks; a tool''s Drive
-        Owner or Site ID overrides it. Not used when each user signs in.'
-      ja_JP: 'サービス プリンシパル: ブックがある OneDrive のユーザー（ユーザー プリンシパル名またはユーザー ID）。ツールの「ドライブ所有者」またはサイト ID が優先されます。ユーザーごとのサインインでは使いません。'
-      zh_Hans: Service Principal：工作簿所在 OneDrive 的用户（用户主体名称或用户 ID），工具的“网盘所有者”或站点 ID 会覆盖此值。每个用户自己登录时不使用。
-    label:
-      en_US: Default Drive Owner
-      ja_JP: 既定のドライブ所有者
-      zh_Hans: 默认网盘所有者
-    placeholder:
-      en_US: e.g. alice@contoso.com
-      ja_JP: 例 alice@contoso.com
-      zh_Hans: 例如 alice@contoso.com
-    required: false
-    type: text-input
-  redirect_uri:
-    help:
-      en_US: Create this plugin's endpoint (plugin details > Endpoints), paste its /excel/callback URL here, and add the same
-        URL to the app registration's Web redirect URIs.
-      ja_JP: このプラグインのエンドポイントを作成し（プラグインの詳細 > エンドポイント）、その /excel/callback の URL をここに貼り付け、同じ URL をアプリ登録の Web リダイレクト URI に追加してください。
-      zh_Hans: 先创建本插件的端点（插件详情 > 端点），把它的 /excel/callback URL 粘贴到这里，并把同一个 URL 加到应用注册的 Web 重定向 URI 中。
-    label:
-      en_US: Sign-in Callback URL
-      ja_JP: サインイン コールバック URL
-      zh_Hans: 登录回调 URL
-    placeholder:
-      en_US: Only for "Each user signs in", e.g. https://dify.example.com/e/xxxx/excel/callback
-      ja_JP: 'ユーザーごとのサインインのみ。例: https://dify.example.com/e/xxxx/excel/callback'
-      zh_Hans: 仅用于“每个用户自己登录”，例如 https://dify.example.com/e/xxxx/excel/callback
-    required: false
-    type: text-input
-  tenant_id:
-    help:
-      en_US: Your directory (tenant) ID, from Microsoft Entra ID > Overview or the app registration's Overview. Service Principal
-        must use it ('common' does not work); with Each user signs in it limits sign-in to your organization.
-      ja_JP: ディレクトリ（テナント）ID です。Microsoft Entra ID > 概要、またはアプリ登録の概要で確認できます。サービス プリンシパルでは必須です（'common' は使えません）。ユーザーごとのサインインでは、自組織のアカウントだけがサインインできるようにします。
-      zh_Hans: 目录（租户）ID，可在 Microsoft Entra ID > 概述或应用注册的概述页找到。Service Principal 必须填它（不能用 'common'）；“每个用户自己登录”模式下，填它可以只允许本组织的账号登录。
-    label:
-      en_US: Tenant ID
-      ja_JP: テナント ID
-      zh_Hans: 租户 ID
-    placeholder:
-      en_US: Directory (tenant) ID, e.g. 00000000-0000-0000-0000-000000000000
-      ja_JP: 'ディレクトリ（テナント）ID、例: 00000000-0000-0000-0000-000000000000'
-      zh_Hans: 目录（租户）ID，例如 00000000-0000-0000-0000-000000000000
-    required: true
-    type: text-input
-    url: https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Overview
-extra:
-  python:
-    source: provider/microsoft_excel365.py
-identity:
-  author: langgenius
-  description:
-    en_US: Connect to Microsoft Excel 365 for spreadsheet operations
-    ja_JP: Microsoft Excel 365に接続してスプレッドシート操作を実行
-    zh_Hans: 连接 Microsoft Excel 365 进行电子表格操作
-  icon: icon.svg
-  label:
-    en_US: Microsoft Excel 365
-    ja_JP: Microsoft Excel 365
-    zh_Hans: Microsoft Excel 365
-  name: excel365
-  tags:
-  - utilities
 oauth_schema:
   client_schema:
   - help:
@@ -257,3 +254,6 @@ tools:
 - tools/excel_append_table_rows.yaml
 - tools/excel_lookup_table.yaml
 - tools/excel_sign_out.yaml
+extra:
+  python:
+    source: provider/microsoft_excel365.py
