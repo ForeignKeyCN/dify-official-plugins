@@ -99,6 +99,9 @@ The first time a user needs Excel, the tool returns a Microsoft sign-in link ins
 
 1. In the app registration, add the **Delegated** permissions listed under Setup (`offline_access`, `User.Read`, `Files.ReadWrite`, `Files.ReadWrite.All`, `Sites.Read.All`) and click **Grant admin consent** so users never see a consent screen.
 2. In Dify, open the plugin's details → **Endpoints**, click **+**, enter a name (nothing else to fill in), and copy the endpoint URL. It looks like `https://<your-dify-domain>/e/<id>/excel/callback`. If it starts with `http://localhost`, your self-hosted Dify still uses the default `ENDPOINT_URL_TEMPLATE=http://localhost/e/{hook_id}`: set `ENDPOINT_URL_TEMPLATE=https://<your-dify-domain>/e/{hook_id}` in `docker/.env` and restart the API, or replace `http://localhost` with your Dify address by hand.
+
+   <img src="_assets/dify-endpoint-url.png" alt="Endpoint URL" width="360">
+
 3. In the app registration, open **Authentication** → **Add Redirect URI** → **Web**, paste the endpoint URL and click **Configure**. A mismatch shows up later as error `AADSTS50011` on the Microsoft sign-in page.
 4. In Dify, click **Add API Key**, set **Mode** to *Each user signs in*, and fill in **Tenant ID**, **Client ID**, **Client Secret** (the secret's *Value*) and **Sign-in Callback URL**. Leave **Default Drive Owner** empty.
 5. In the agent, add the Excel tools you want and **Sign Out of Excel**, and choose this authorization in the credential menu. Instructions like these work well:
@@ -112,6 +115,16 @@ You can use the Excel tools on the current user's own workbooks.
 - Never make up data. If a tool returns an error, tell the user what it says.
 - If the user asks to sign out or switch accounts, call excel_sign_out.
 ```
+
+With Outlook, Teams and OneDrive in the same agent, each has its own per-user authorization:
+
+<img src="_assets/agent-credentials.png" alt="Outlook, Teams, OneDrive and Excel, each with its own per-user authorization" width="600">
+
+What users see: the first request returns a sign-in link; after signing in, the first answer names the account used.
+
+<img src="_assets/chat-sign-in-link.png" alt="Sign-in link" width="600">
+
+<img src="_assets/chat-signed-in.png" alt="Answer after signing in, naming the account" width="600">
 
 What to know:
 - Each user's tokens are kept in the plugin's storage, encrypted with a key derived from the client secret. They never reach the agent or the logs. The endpoint only holds a one-time authorization code briefly; turning it into a token also needs the client secret and a PKCE verifier it never sees.
