@@ -32,6 +32,7 @@ Dify 的 Microsoft Outlook 集成（通过 Microsoft Graph），支持**邮件�
 - **List Calendars**：列出日历。
 - **List Events**：列出即将到来的事件，可指定某个日历。
 - **Search Events**：按关键词和/或日期范围查找事件。
+- List Events 和 Search Events 会显示每个事件的地点和在线会议链接（Teams，或邀请正文里的 Zoom / Google Meet / Webex 链接），Agent 不用逐个打开事件就能知道哪些是在线会议（1.0.0）。
 - **List Calendar Groups**（0.7.0）：列出日历组，例如 *My Calendars* 和 *People's calendars*；别人共享给您的日历通常在后者。
 - **日历组和共享日历**（0.7.0）：List Calendars、List Events、Search Events 支持可选的 **Calendar Group ID**，会覆盖组内所有日历，并标出每个事件所属的日历和所有者。需要 `Calendars.Read.Shared`。
 - **Get Schedule**（0.7.0）：查询一段时间内一些人的忙闲，可按邮箱和/或日历组查询。组织内的任何人都能查，无需共享日历；只有您有权查看的事件才显示主题。

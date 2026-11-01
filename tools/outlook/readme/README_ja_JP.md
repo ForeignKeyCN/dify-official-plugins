@@ -32,6 +32,7 @@ Microsoft Graph 経由で Microsoft Outlook と連携する Dify プラグイン
 - **List Calendars**: カレンダーを一覧表示します。
 - **List Events**: 今後の予定を一覧表示します。カレンダーを指定することもできます。
 - **Search Events**: キーワードや日付範囲で予定を検索します。
+- List Events と Search Events は、各予定の場所とオンライン会議の参加リンク（Teams、または招待本文にある Zoom / Google Meet / Webex のリンク）も表示するので、エージェントが予定を 1 件ずつ開かなくてもオンライン会議かどうかがわかります（1.0.0）。
 - **List Calendar Groups**（0.7.0）: *My Calendars* や *People's calendars* などのカレンダー グループを一覧表示します。共有されたカレンダーは通常、後者に入っています。
 - **カレンダー グループと共有カレンダー**（0.7.0）: List Calendars、List Events、Search Events に **Calendar Group ID** を指定すると、グループ内のすべてのカレンダーが対象になり、各予定にカレンダーと所有者が付きます。`Calendars.Read.Shared` が必要です。
 - **Get Schedule**（0.7.0）: 指定した時間帯の空き時間を、メールアドレスやカレンダー グループで調べます。カレンダーを共有していなくても組織内の誰でも調べられます。件名は閲覧権限がある予定だけに表示されます。

@@ -310,6 +310,40 @@ def address_of(recipient: Mapping[str, Any] | None) -> tuple[str, str]:
     return _s(email.get("name")), _s(email.get("address") or email.get("email"))
 
 
+# Join links of the common meeting services, as pasted into invitations.
+_MEETING_LINK = re.compile(
+    r"https://(?:teams\.microsoft\.com/l/meetup-join/|teams\.live\.com/meet/|[\w.-]*zoom\.us/[jw]/"
+    r"|meet\.google\.com/|[\w.-]*webex\.com/(?:meet|join)/)[^\s<>\"')]+"
+)
+
+
+def meeting_link(event: Mapping[str, Any]) -> str:
+    """
+    The event's online-meeting join link: the one Microsoft Graph knows (Teams meetings created
+    as such), else one pasted into the invitation text (other organizations' invites, Zoom...).
+    """
+    join_url = (event.get("onlineMeeting") or {}).get("joinUrl")
+    if join_url:
+        return join_url
+    found = _MEETING_LINK.search(event.get("bodyPreview") or "")
+    # A link at the end of a sentence would otherwise keep the full stop.
+    return found.group(0).rstrip(".,;:!?") if found else ""
+
+
+def event_extras(event: Mapping[str, Any]) -> str:
+    """Location and online-meeting link for a one-line event summary, so "which are Teams meetings?" needs no Get Event."""
+    parts = []
+    location = (event.get("location") or {}).get("displayName")
+    if location:
+        parts.append(f"at {location}")
+    link = meeting_link(event)
+    if link:
+        parts.append(f"online meeting: {link}")
+    elif event.get("isOnlineMeeting"):
+        parts.append("online meeting")
+    return f" ({'; '.join(parts)})" if parts else ""
+
+
 def event_vars(event: Mapping[str, Any]) -> dict[str, Any]:
     """A calendar event as flat fields; calendar_name/owner_address come from a calendar-group search."""
     start, end = event.get("start") or {}, event.get("end") or {}
@@ -327,6 +361,8 @@ def event_vars(event: Mapping[str, Any]) -> dict[str, Any]:
         "web_link": _s(event.get("webLink")),
         "calendar_name": _s(calendar.get("name")),
         "owner_address": _s(calendar.get("owner_address")),
+        "is_online_meeting": bool(event.get("isOnlineMeeting") or meeting_link(event)),
+        "online_meeting_url": meeting_link(event),
     }
 
 
@@ -341,5 +377,5 @@ def event_detail_vars(event: Mapping[str, Any]) -> dict[str, Any]:
         "time_zone": v["time_zone"],
         "location": v["location"],
         "web_link": v["web_link"],
-        "online_meeting_url": _s((event.get("onlineMeeting") or {}).get("joinUrl")),
+        "online_meeting_url": v["online_meeting_url"],
     }

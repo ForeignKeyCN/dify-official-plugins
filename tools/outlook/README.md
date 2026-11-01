@@ -32,6 +32,7 @@ All three use the same Microsoft Entra app registration (step 1 below) and can e
 - **List Calendars**: list your calendars.
 - **List Events**: list upcoming events, optionally from one calendar.
 - **Search Events**: find events by keyword and/or date range.
+- List Events and Search Events show each event's location and online-meeting join link (Teams, or a Zoom / Google Meet / Webex link in the invitation), so an agent can tell which are online meetings without opening each event (1.0.0).
 - **List Calendar Groups** (0.7.0): calendar groups such as *My Calendars* and *People's calendars*; calendars other people shared with you are usually in the latter.
 - **Calendar groups and shared calendars** (0.7.0): List Calendars, List Events and Search Events take an optional **Calendar Group ID**; they cover every calendar in the group and tag each event with its calendar and owner. Needs `Calendars.Read.Shared`.
 - **Get Schedule** (0.7.0): free/busy of people for a time window, by email and/or a calendar group. Works for anyone in the organization without calendar sharing; subjects only where you may see them.
