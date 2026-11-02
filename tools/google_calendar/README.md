@@ -14,7 +14,7 @@ This plugin integrates with Google Calendar, supporting operations such as manag
   - The first time someone needs it, the agent gives them a Google sign-in link.
   - After they sign in, the tools act as that person.
   - The OAuth credential (one shared account) keeps working as before.
-- **New tools** covering n8n's Google Calendar node:
+- **New tools**:
   - `google_calendar_get_event`, `google_calendar_update_event`, `google_calendar_delete_event`.
   - `google_calendar_check_availability` (free/busy).
   - `google_calendar_sign_out`.
