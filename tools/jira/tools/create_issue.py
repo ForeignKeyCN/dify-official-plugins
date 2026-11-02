@@ -11,7 +11,7 @@ from tools.jira_fields import issue_fields
 
 from utils.md2adf import markdown_to_adf
 
-# Optional fields (n8n's "Additional Fields"); only the ones given are sent.
+# Optional fields; only the ones given are sent.
 OPTIONAL_FIELDS = ("assignee", "priority", "labels", "due_date", "parent_key", "custom_fields")
 
 

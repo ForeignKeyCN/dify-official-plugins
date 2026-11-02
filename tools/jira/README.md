@@ -6,7 +6,7 @@ Search, create, update and move Jira issues, work with comments, attachments and
 
 - **OAuth**: authorize the plugin with an Atlassian account from the Dify console, without an API token.
 - **Each user signs in**: in a chat agent, every user works in Jira as themselves. The first time someone needs Jira, the agent gives them an Atlassian sign-in link. After they sign in, the tools act with that person's own Jira permissions.
-- 17 new tools that bring the plugin in line with n8n's Jira node: JQL search, update, status transitions, changelog, notifications, comments, attachments and users.
+- 17 new tools: JQL search, update, status transitions, changelog, notifications, comments, attachments and users.
 - Typed output variables (and `success` / `error`) on the new tools, for workflows.
 - `create_issue` takes a project key as well as an ID, plus optional assignee, priority, labels, due date, parent and custom fields.
 
@@ -26,7 +26,7 @@ Existing API-token credentials keep working unchanged.
 
 Descriptions and comments accept Markdown. On Jira Cloud it is converted to Atlassian Document Format; on Server it is sent as text.
 
-n8n's "create user" and "delete user" are not included. They need site-admin rights and are rarely something an agent should do.
+Creating and deleting users is not included. They need site-admin rights and are rarely something an agent should do.
 
 ### Choose how to connect
 
