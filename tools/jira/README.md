@@ -26,7 +26,7 @@ Existing API-token credentials keep working unchanged.
 
 Descriptions and comments accept Markdown. On Jira Cloud it is converted to Atlassian Document Format; on Server it is sent as text.
 
-Creating and deleting users is not included. They need site-admin rights and are rarely something an agent should do.
+Creating and deleting users is not included: it needs site-admin rights and is rarely something an agent should do.
 
 ### Choose how to connect
 
