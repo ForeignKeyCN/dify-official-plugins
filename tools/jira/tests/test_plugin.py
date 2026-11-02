@@ -92,7 +92,7 @@ def test_original_tools_work_with_oauth(monkeypatch):
 
 def test_original_tool_returns_the_sign_in_link_per_user(http):
     result = run(make_tool(ListProjectTool, PER_USER))
-    assert "https://auth.atlassian.com/authorize?" in result.texts[0]
+    assert "/jira/callback?start=" in result.texts[0]
     assert http.calls == []
 
 
