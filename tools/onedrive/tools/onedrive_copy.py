@@ -17,7 +17,7 @@ class CopyTool(Tool):
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
         """
-        Copy a file or folder (n8n: File > Copy) into a folder of the same drive, optionally
+        Copy a file or folder into a folder of the same drive, optionally
         under a new name. A name already taken in the target folder gets a number appended.
         """
         file_id = str(tool_parameters.get("file_id") or "").strip()

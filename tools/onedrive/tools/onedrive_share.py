@@ -14,7 +14,7 @@ _SCOPES = ("anonymous", "organization")
 class ShareTool(Tool):
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
-        """Create a sharing link for a file or folder (n8n: File > Share, Folder > Share)."""
+        """Create a sharing link for a file or folder."""
         item_id = str(tool_parameters.get("item_id") or "").strip()
         link_type = str(tool_parameters.get("type") or "view").strip().lower()
         scope = str(tool_parameters.get("scope") or "organization").strip().lower()

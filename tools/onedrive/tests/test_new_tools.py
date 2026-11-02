@@ -1,4 +1,4 @@
-"""The operations added to match n8n's OneDrive node: list folder, create folder, rename, copy, share, text upload."""
+"""The operations added in 1.0.0: list folder, create folder, rename, copy, share, text upload."""
 import json
 from types import SimpleNamespace
 

@@ -12,7 +12,7 @@ class CreateFolderTool(Tool):
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
         """
-        Create a folder (n8n: Folder > Create). The name may be a path such as
+        Create a folder. The name may be a path such as
         "Pictures/2021": missing folders along it are created, existing ones reused.
         """
         name = str(tool_parameters.get("name") or "").strip().strip("/")

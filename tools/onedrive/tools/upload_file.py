@@ -22,7 +22,7 @@ class UploadFileTool(Tool):
             file_content = file.blob
             file_name = custom_file_name if custom_file_name else file.filename
         elif text_content:
-            # Text written by the agent or a workflow (n8n's File Content), saved as a UTF-8 file.
+            # Text written by the agent or a workflow, saved as a UTF-8 file.
             if not custom_file_name:
                 yield self.create_text_message("A file name (such as notes.txt) is required when uploading text.")
                 yield self.create_json_message({"error": "A file name is required when uploading text."})

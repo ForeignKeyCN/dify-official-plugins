@@ -13,7 +13,7 @@ _MAX_LIMIT = 200
 class ListFolderTool(Tool):
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
-        """The items in a folder (n8n: Folder > Get Children); no folder ID means the root."""
+        """The items in a folder; no folder ID means the root."""
         folder_id = str(tool_parameters.get("folder_id") or "").strip()
         try:
             limit = int(tool_parameters.get("limit") or 50)

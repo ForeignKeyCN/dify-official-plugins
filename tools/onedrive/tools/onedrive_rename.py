@@ -14,7 +14,7 @@ _INVALID = set('"*:<>?/\\|')
 class RenameTool(Tool):
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
-        """Rename a file or folder (n8n: File > Rename, Folder > Rename)."""
+        """Rename a file or folder."""
         item_id = str(tool_parameters.get("item_id") or "").strip()
         new_name = str(tool_parameters.get("new_name") or "").strip()
         if not item_id or not new_name:

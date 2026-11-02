@@ -216,7 +216,7 @@ Create a sharing link for a file or folder.
 - type (select, optional): `view` (default, read-only), `edit`, or `embed` (personal OneDrive only).
 - scope (select, optional): `organization` (default, people in your organization) or `anonymous` (anyone with the link; administrators often turn these off).
 
-These five, with the existing tools, cover every operation of n8n's Microsoft OneDrive node (file: copy, delete, download, get, rename, search, share, upload; folder: create, delete, get children, rename, search, share). Their names carry an `onedrive_` prefix because Dify's agent requires tool names to be unique across all the plugins an agent uses.
+With the existing tools, these five cover the common OneDrive operations (file: copy, delete, download, get, rename, search, share, upload; folder: create, delete, get children, rename, search, share). Their names carry an `onedrive_` prefix because Dify's agent requires tool names to be unique across all the plugins an agent uses.
 
 ### onedrive_sign_out
 *Each user signs in* only: forget the current user's OneDrive sign-in, for switching accounts. Other plugins (for example Outlook) keep their own sign-in. No parameters.
