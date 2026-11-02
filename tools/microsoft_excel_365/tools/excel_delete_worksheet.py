@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class DeleteWorksheetTool(Tool):
-    """Delete a worksheet from a workbook (n8n: Worksheet > Delete)."""
+    """Delete a worksheet from a workbook."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:

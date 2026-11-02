@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class ClearWorksheetDataTool(Tool):
-    """Clear the contents of a range (n8n: Worksheet > Clear)"""
+    """Clear the contents of a range"""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:

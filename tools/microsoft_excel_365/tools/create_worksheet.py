@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class CreateWorksheetTool(Tool):
-    """Add a worksheet to a workbook (n8n: Workbook > Add Worksheet)"""
+    """Add a worksheet to a workbook"""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:

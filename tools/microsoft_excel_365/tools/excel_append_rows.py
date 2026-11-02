@@ -11,7 +11,7 @@ from tools.sheet_rows import UsedRange, parse_records, rows_for_header
 
 class AppendRowsTool(Tool):
     """
-    Add rows below the data on a worksheet (n8n: Worksheet > Append). Rows are objects keyed
+    Add rows below the data on a worksheet. Rows are objects keyed
     by the header row, or lists of cell values. On an empty sheet, objects also write the header.
     """
 

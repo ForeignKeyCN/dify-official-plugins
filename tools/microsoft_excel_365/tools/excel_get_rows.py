@@ -25,7 +25,7 @@ def _index(value: Any, default: int, name: str) -> int:
 
 class GetRowsTool(Tool):
     """
-    Rows of a worksheet as objects keyed by its header row (n8n: Worksheet > Get Rows).
+    Rows of a worksheet as objects keyed by its header row.
     Without a range, the sheet's used range is read.
     """
 

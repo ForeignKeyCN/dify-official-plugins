@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class ListWorksheetsTool(Tool):
-    """List the worksheets of a workbook (n8n: Worksheet > Get Many)"""
+    """List the worksheets of a workbook"""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:

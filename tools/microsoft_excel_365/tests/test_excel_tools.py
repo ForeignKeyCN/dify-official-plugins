@@ -1,4 +1,4 @@
-"""Graph context, URL encoding, output variables and the n8n-parity tools."""
+"""Graph context, URL encoding, output variables and the 1.0.0 tools."""
 import importlib
 import json
 from pathlib import Path
@@ -308,7 +308,7 @@ def test_top_left_ignores_the_sheet_name(address, expected):
     assert graph_module.top_left(address) == expected
 
 
-# ── n8n options: Get Rows, Update, Update All Matches, Return All Matches ──
+# ── row options: Get Rows, Update, Update All Matches, Return All Matches ──
 
 SHEET = {"address": "Sheet1!A1:C5", "values": [["Title", "", ""], ["ID", "Status", "Owner"], [1, "Open", "Kim"], ["", "", ""], [1, "Open", "Lee"]]}
 

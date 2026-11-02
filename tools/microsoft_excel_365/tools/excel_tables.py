@@ -1,5 +1,5 @@
 """
-Shared reads for the Excel table tools (excel_*table* files: n8n's Table > Add, Delete,
+Shared reads for the Excel table tools (excel_*table* files: Table > Add, Delete,
 Convert to Range, Get Columns, Get Rows, Append, Lookup, plus List Tables).
 
 A table is named by its ID or its name (e.g. "Table1"); rows are returned as objects keyed

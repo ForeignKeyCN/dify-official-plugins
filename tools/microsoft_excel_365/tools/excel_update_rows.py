@@ -11,7 +11,7 @@ from tools.sheet_rows import match_and_write, parse_records
 
 class UpdateRowsTool(Tool):
     """
-    Update the rows whose key column matches (n8n: Worksheet > Update, mapped mode). Rows are
+    Update the rows whose key column matches. Rows are
     objects keyed by the header row; columns left out keep their value. Nothing is appended:
     keys with no matching row are reported.
     """

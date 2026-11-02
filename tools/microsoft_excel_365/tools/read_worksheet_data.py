@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class ReadWorksheetDataTool(Tool):
-    """Read cell values from a range (n8n: Worksheet > Get Rows)"""
+    """Read cell values from a range"""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:

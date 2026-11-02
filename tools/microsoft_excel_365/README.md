@@ -33,7 +33,7 @@ This plugin supports comprehensive Excel 365 operations including:
 - **Tables** (new in 1.0.0): list, add, delete and convert Excel tables; read their columns and rows, append rows, and look up rows by a column value
 - **Delete** (new in 1.0.0): workbooks and worksheets
 
-Together these cover every operation of n8n's Microsoft Excel 365 node (v2). `read_worksheet_data` and `write_worksheet_data` remain for raw cell grids (n8n's *RAW* modes of Get Rows and Update).
+Together these cover the common workbook, worksheet and table operations. `read_worksheet_data` and `write_worksheet_data` remain for raw cell grids.
 
 ## Setup
 
@@ -239,11 +239,11 @@ Search for specific values in an Excel worksheet.
 - search_value (string): The value to search for.
 - range (string, optional): The cell range to search in (e.g., A1:Z1000). Default is A1:Z1000.
 
-### New in 1.0.0 (n8n v2 parity)
+### New in 1.0.0
 
 All take `workbook_id` and the optional `site_id`; with a Service Principal, also the **Drive Owner** setting. Rows can be objects keyed by column header (`[{"Name": "Kim", "Score": 90}]`; left-out columns stay empty) or lists of cell values.
 
-| Tool | n8n operation | What it does |
+| Tool | Operation | What it does |
 |---|---|---|
 | `excel_append_rows` | Worksheet: Append | Adds rows below the data on a worksheet; on an empty sheet, object keys become the header row |
 | `excel_get_rows` | Worksheet: Get Rows | Rows as objects keyed by the header row; reads the used range unless a range is given, with Header Row / First Data Row (default 500 rows, up to 5000) |

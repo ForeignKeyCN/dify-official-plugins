@@ -1,7 +1,7 @@
 """
-Rows by header, for the n8n-style worksheet and table tools.
+Rows by header, for the row-based worksheet and table tools.
 
-Agents (and n8n) think in rows such as {"Name": "Kim", "Score": 90}; Excel stores a grid.
+Agents and workflows think in rows such as {"Name": "Kim", "Score": 90}; Excel stores a grid.
 These helpers read a sheet's used range, take its first row as the header, and turn
 objects into rows of that width (and back).
 """

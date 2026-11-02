@@ -28,7 +28,7 @@ def _is_workbook(item: dict[str, Any]) -> bool:
 
 
 class ListWorkbooksTool(Tool):
-    """List Excel workbooks (n8n: Workbook > Get Many)"""
+    """List Excel workbooks"""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:

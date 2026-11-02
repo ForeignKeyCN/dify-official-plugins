@@ -11,8 +11,7 @@ from tools.sheet_rows import match_and_write, parse_records
 
 class UpsertRowsTool(Tool):
     """
-    Update the rows whose key column matches, append the others (n8n: Worksheet > Append or
-    Update). Rows are objects keyed by the header row; columns left out of an object keep
+    Update the rows whose key column matches, append the others. Rows are objects keyed by the header row; columns left out of an object keep
     their current value.
     """
 
