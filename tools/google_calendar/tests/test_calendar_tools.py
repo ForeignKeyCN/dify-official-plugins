@@ -91,7 +91,7 @@ def test_original_tool_with_oauth_and_per_user(http):
     result = run(make_tool(ListCalendarsTool, OAUTH))
     assert http.calls[0].headers["Authorization"] == "Bearer oauth-token" and result.json
     per_user = run(make_tool(ListCalendarsTool, PER_USER))
-    assert "https://accounts.google.com/o/oauth2/v2/auth?" in per_user.texts[0]
+    assert "/google_calendar/callback?start=" in per_user.texts[0]
 
 
 def test_sign_out_modes(http):
