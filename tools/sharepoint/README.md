@@ -6,7 +6,7 @@
 
 ## Overview
 
-Read and write SharePoint **lists**, **list items** and **document library files** through Microsoft Graph, from workflows and agents. The tools cover every operation of n8n's Microsoft SharePoint node, plus the lookups an agent needs to find sites, lists and files by itself.
+Read and write SharePoint **lists**, **list items** and **document library files** through Microsoft Graph, from workflows and agents. The tools cover lists, items and files, plus the lookups an agent needs to find sites, lists and files by itself.
 
 To search content across all of SharePoint and OneDrive, or to import documents into a knowledge base, use the **SharePoint datasource** plugin instead; this plugin works on lists and files you point it at.
 
@@ -74,7 +74,7 @@ What to know:
 
 Every tool takes a **Site**: its URL (`https://contoso.sharepoint.com/sites/Team`, a link to a page or file in the site works too), its ID from **Search Sites**, or `root`. Lists are named by ID or name; files and folders by ID (from **List Files**). Files are in the site's default document library.
 
-| Tool | n8n operation | What it does |
+| Tool | Operation | What it does |
 |---|---|---|
 | `sharepoint_search_sites` | (site picker) | Find sites by name |
 | `sharepoint_get_site` | (site picker) | A site from its URL, ID or `root` |

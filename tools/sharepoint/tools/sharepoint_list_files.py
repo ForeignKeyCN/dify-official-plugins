@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class ListFilesTool(Tool):
-    """Files and folders in a folder of the site's document library (n8n's folder and file pickers)."""
+    """Files and folders in a folder of the site's document library."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

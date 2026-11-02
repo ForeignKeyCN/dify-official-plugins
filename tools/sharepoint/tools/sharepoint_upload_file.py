@@ -12,7 +12,7 @@ from tools.outputs import with_outputs
 class UploadFileTool(Tool):
     """
     Upload a file, or save text as a file, into a folder of the site's document library
-    (n8n: File > Upload). A file with the same name is replaced.
+   . A file with the same name is replaced.
     """
 
     @with_outputs

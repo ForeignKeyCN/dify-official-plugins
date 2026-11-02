@@ -1,4 +1,4 @@
-"""Site resolution, URL encoding, output variables, the n8n-parity tools and the provider."""
+"""Site resolution, URL encoding, output variables, the tools and the provider."""
 import importlib
 import json
 from pathlib import Path
