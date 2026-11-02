@@ -6,7 +6,7 @@
 
 ## Introduction
 
-This plugin integrates with Microsoft To Do through Microsoft Graph: read, create, update, complete and delete tasks and task lists, and link tasks to the items they came from in other apps. With version 1.0.0 it covers every operation of n8n's Microsoft To Do node.
+This plugin integrates with Microsoft To Do through Microsoft Graph: read, create, update, complete and delete tasks and task lists, and link tasks to the items they came from in other apps. Version 1.0.0 covers all of these operations for tasks, lists and linked resources.
 
 ### Choose how to authorize
 
