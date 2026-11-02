@@ -74,7 +74,7 @@ def test_original_tool_sends_no_token_in_url(monkeypatch):
 
 def test_original_tool_returns_the_sign_in_link_per_user(http):
     result = run(make_tool(FetchAllBoardsTool, PER_USER), {})
-    assert "https://trello.com/1/authorize?" in result.texts[0] and http.calls == []
+    assert "/trello/callback?start=" in result.texts[0] and http.calls == []
 
 
 def test_update_card_accepts_more_fields(monkeypatch):
