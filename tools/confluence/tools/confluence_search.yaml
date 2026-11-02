@@ -51,7 +51,7 @@ parameters:
     en_US: Only content with this label
     zh_Hans: 仅含此标签的内容
     ja_JP: このラベルの付いたコンテンツのみ
-  llm_description: Limit to content with this label (n8n's 'get pages by label').
+  llm_description: Limit to content with this label.
   form: llm
 - name: content_type
   type: select

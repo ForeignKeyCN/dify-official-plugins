@@ -8,7 +8,7 @@ Search, read, create and update Confluence pages, and work with their comments, 
 - **Each user signs in**: in a chat agent, every user works in Confluence as themselves.
   - The first time someone needs Confluence, the agent gives them an Atlassian sign-in link.
   - After they sign in, the tools act with that person's own Confluence permissions.
-- **14 new tools**, covering n8n's Confluence operations:
+- **14 new tools**:
   - CQL search, read and update pages (replace, append or prepend).
   - Child pages, comments, labels and attachments.
 - **Output variables**: the new tools return typed output variables (and `success` / `error`) for workflows.
@@ -24,7 +24,7 @@ Existing API-token credentials keep working unchanged.
 
 | Area | Tools |
 |---|---|
-| Find | `confluence_search`: free text, space, label (n8n's "get pages by label") or any CQL query |
+| Find | `confluence_search`: free text, space, label or any CQL query |
 | Pages | `confluence_read_page` (readable text, version, link), `get_page`, `create_page`, `confluence_update_page` (replace / append / prepend, rename), `remove_page`, `confluence_list_child_pages` |
 | Spaces | `list_space`, `get_space`, `list_page_of_space` |
 | Comments | `confluence_list_comments`, `confluence_add_comment`, `confluence_delete_comment` |
