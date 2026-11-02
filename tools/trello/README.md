@@ -9,7 +9,7 @@ Work with boards, lists, cards, comments, checklists, labels, members and attach
 - **Each user signs in**: in a chat agent, every user works in Trello as themselves.
   - The first time someone needs Trello, the agent gives them a Trello link.
   - After they click **Allow**, the tools act with that person's own boards and permissions.
-- **29 new tools** covering n8n's Trello node: search, cards, comments, checklists, labels, lists, board members and attachments.
+- **29 new tools**: search, cards, comments, checklists, labels, lists, board members and attachments.
 - **Output variables**: the new tools return typed output variables (and `success` / `error`) for workflows.
 - **`update_card_by_id`**: also takes the due date, due-complete, archived, position, members and labels.
 - **Security**: the API key and token are now sent in the `Authorization` header instead of the URL, so they no longer end up in proxy or server logs.

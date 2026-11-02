@@ -77,7 +77,7 @@ def test_original_tool_returns_the_sign_in_link_per_user(http):
     assert "https://trello.com/1/authorize?" in result.texts[0] and http.calls == []
 
 
-def test_update_card_accepts_n8n_fields(monkeypatch):
+def test_update_card_accepts_more_fields(monkeypatch):
     sent = []
     monkeypatch.setattr(trello_http._requests, "request", lambda method, url, **kw: sent.append((method, url, kw)) or FakeResponse({}))
     run(make_tool(UpdateCardByIdTool, TOKEN), {"id": "c1", "dueComplete": True, "idLabels": "l1,l2", "pos": "top"})
