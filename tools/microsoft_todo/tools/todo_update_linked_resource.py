@@ -11,7 +11,7 @@ FIELDS = {"application_name": "applicationName", "display_name": "displayName", 
 
 
 class UpdateLinkedResourceTool(Tool):
-    """Change a linked resource's fields (n8n: Linked Resource > Update)."""
+    """Change a linked resource's fields."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

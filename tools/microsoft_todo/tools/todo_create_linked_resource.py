@@ -11,7 +11,7 @@ FIELDS = {"display_name": "displayName", "external_id": "externalId", "web_url":
 
 
 class CreateLinkedResourceTool(Tool):
-    """Link a task to an item in another app, e.g. the email or ticket it came from (n8n: Linked Resource > Create)."""
+    """Link a task to an item in another app, e.g. the email or ticket it came from."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

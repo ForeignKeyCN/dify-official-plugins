@@ -412,7 +412,7 @@ IMPORTANCES = ("low", "normal", "high")
 
 
 def task_fields(tool_parameters: Mapping[str, Any], *, for_update: bool) -> dict[str, Any]:
-    """The Graph body for the optional task fields that were given (n8n's additionalFields / updateFields)."""
+    """The Graph body for the optional task fields that were given."""
     body: dict[str, Any] = {}
     title = str(tool_parameters.get("title") or "").strip()
     if title and for_update:

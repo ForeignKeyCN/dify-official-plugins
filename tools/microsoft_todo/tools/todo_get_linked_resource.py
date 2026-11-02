@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class GetLinkedResourceTool(Tool):
-    """One linked resource of a task (n8n: Linked Resource > Get)."""
+    """One linked resource of a task."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

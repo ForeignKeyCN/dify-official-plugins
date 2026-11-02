@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class UpdateListTool(Tool):
-    """Rename a task list (n8n: List > Update)."""
+    """Rename a task list."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

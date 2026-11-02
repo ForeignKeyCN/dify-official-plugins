@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class GetTaskByIdTool(Tool):
-    """One task (n8n: Task > Get)."""
+    """One task."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

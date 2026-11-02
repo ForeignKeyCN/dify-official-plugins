@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class GetListsTool(Tool):
-    """The user's task lists (n8n: List > Get Many)."""
+    """The user's task lists."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

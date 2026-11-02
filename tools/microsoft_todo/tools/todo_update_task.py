@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class UpdateTaskTool(Tool):
-    """Change a task's title, notes, due date, reminder, importance or status (n8n: Task > Update)."""
+    """Change a task's title, notes, due date, reminder, importance or status."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

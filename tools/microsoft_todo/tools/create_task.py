@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class CreateTaskTool(Tool):
-    """Create a task (n8n: Task > Create, with its content, due, reminder, importance and status fields)."""
+    """Create a task."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class DeleteLinkedResourceTool(Tool):
-    """Remove a linked resource from a task (n8n: Linked Resource > Delete)."""
+    """Remove a linked resource from a task."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

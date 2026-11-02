@@ -26,7 +26,7 @@ def task_limit(tool_parameters: dict[str, Any]) -> int:
 
 
 class GetTasksByListIdTool(Tool):
-    """Tasks of one list (n8n: Task > Get Many), not completed ones by default."""
+    """Tasks of one list, not completed ones by default."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

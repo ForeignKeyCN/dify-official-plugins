@@ -116,7 +116,7 @@ What to know:
 
 Every tool also has a **Task Owner** setting, used only with a Service Principal.
 
-| Tool | n8n operation | What it does |
+| Tool | Operation | What it does |
 |---|---|---|
 | `get_lists` | List: Get Many | The user's task lists |
 | `get_tasks` | – | The user's task lists, like `get_lists` (the name is historical: it has always returned lists) |

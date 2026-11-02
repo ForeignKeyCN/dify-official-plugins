@@ -9,7 +9,7 @@ from tools.outputs import with_outputs
 
 
 class DeleteTaskTool(Tool):
-    """Delete a task (n8n: Task > Delete)."""
+    """Delete a task."""
 
     @with_outputs
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:

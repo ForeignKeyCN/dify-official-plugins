@@ -1,4 +1,4 @@
-"""Graph context (incl. pre-1.0.0 authorizations), output variables, the n8n-parity tools and the provider."""
+"""Graph context (incl. pre-1.0.0 authorizations), output variables, the 1.0.0 tools and the provider."""
 import importlib
 import json
 from pathlib import Path
@@ -179,7 +179,7 @@ def test_paging_stays_on_the_graph_host(monkeypatch):
     assert len(graph.calls) == 1 and out["count"] == 1
 
 
-def test_create_task_with_n8n_fields(monkeypatch):
+def test_create_task_with_optional_fields(monkeypatch):
     graph, out, _, _ = run("create_task", {"list_id": "l1", "title": "Call Kim", "due_date": "2026-11-05", "body_text": "re: Q3",
                                             "reminder_datetime": "2026-11-04T09:00:00+09:00", "importance": "high", "status": "inProgress"},
                            {("POST", f"{TODO}/lists/l1/tasks"): FakeResponse(TASK, 201)}, monkeypatch)
